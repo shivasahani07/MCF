@@ -10,24 +10,24 @@
         <aura:registerEvent name="sampleCmpEvent" type="c:SampleComponentEvent" />
     
     <div class="slds-grid" >
-        <aura:if isTrue="{!v.disablePrev}">
-            <lightning:buttonIcon  iconName="utility:left"  variant="brand" size="large" aura:id="prevBtn"
+        
+            <lightning:buttonIcon  iconName="utility:left"  variant="border-filled" size="large" aura:id="prevBtn" alternativeText="left"
                                   title="Previous" onclick="{!c.handlePrevClicked}"/>
-        </aura:if>
+        
         <!-- Date Bar -->
         <div>
         <aura:iteration items="{!v.MonthListToShow}" var="dateObj">
              <aura:if isTrue="{!dateObj.colormatch}">
-                <lightning:button variant="brand" label="{!dateObj.month}" title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
+                <lightning:button variant="brand" label="{!dateObj.month}"  title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
              <aura:set attribute="else">
-                <lightning:button variant="Neutral" label="{!dateObj.month}" title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
+                <lightning:button variant="Neutral" label="{!dateObj.month}"  title="Brand action" value="{!dateObj.month}" onclick="{! c.handleClick }" />
              </aura:set>
             </aura:if>
         </aura:iteration>
         </div>
         
         <!-- Next Button -->
-        <lightning:buttonIcon  iconName="utility:right"  variant="brand" size="large" aura:id="nextBtn"
+        <lightning:buttonIcon  iconName="utility:right"  variant="border-filled" size="large" aura:id="nextBtn" alternativeText="right"
                               title="Next" onclick="{!c.handleNextClicked}" disabled="{!v.disableNext}"/>
     </div>
   </aura:component>

@@ -1,20 +1,4 @@
 ({
-   /* simulateServerRequest: function (onResponse) {
-        setTimeout(function () {
-            var serverResponse = {
-                selectedColorId: 2,
-                colors: [
-                    { id: 1, label: '--None--' },
-                    { id: 2, label: 'Not Started'},
-                    { id: 3, label: 'In Progress' },
-                    { id: 4, label: 'Completed' }
-                ]
-            };
-
-            onResponse.call(null, serverResponse);
-        }, 2000);
-    },*/
-    
     getVisitRecord : function(component, event, helper){
         debugger;
         var visitRecId = 'a220k000000VO6WAAW';
@@ -37,5 +21,35 @@
             
         });
         $A.enqueueAction(action);
+    },
+    CheckInVisithelper : function(component,lat,long){
+        debugger;
+        var action = component.get("c.checkInVisitUpdate");
+        action.setParams({
+            checkInLat: lat,
+            checkInLang: long
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var data = response.getReturnValue(); 
+                if(data !=null){
+                    component.set("v.ShowCheckInButton",true);
+                    component.set("v.ShowCheckOutButton",false);
+                }
+                alert('Check In Done Successfully');
+            } else if (state === "ERROR") {
+                var errors = action.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        alert(errors[0].message);
+                    }
+                }
+            } else if (state === "INCOMPLETE") {
+                alert('No response from server or client is offline.');
+            }
+        })
+        $A.enqueueAction(action);
     }
+
 });

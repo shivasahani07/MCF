@@ -4,7 +4,8 @@
     <aura:attribute name="Monthly_Beat_Plan__c" type="object[]" />
     <aura:attribute name="Visits" type="object[]" />
     <aura:attribute name="Weeklybp" type="Weekly_Beat_Plan__c[]" />
-    
+    <aura:attribute name="month" type="String" />
+    <aura:attribute name="year" type="String" />
     
     
     
@@ -72,13 +73,12 @@
         }
         
     </aura:html> 
-    
-    <div class="mainContainer">
+    <div class="mainContainer" style="height:90vh;">
         <div class="boxContainer" aura:id="external-events">
             <aura:iteration items="{!v.Weeklybp}" var="item">
-                <div class="box">
-                    <h3>{!item.Week_Identifier__c}</h3>
-                    <p>{!item.Start_Day_of_Week__c} TO {!item.End_Day_of_Week__c} </p>
+                <div class="box draggable-event" id="draggableEvent" draggable="true">
+                    <h3>{!item.Week_Number__c}</h3>
+                    <p>{!item.Start_Day_of_Week__c} T0 {!item.End_Day_of_Week__c} </p>
                     <div class="box-buttons">
                         <button class="slds-button slds-button_neutral button-light-blue">4 Site Visit</button>
                         <button class="slds-button slds-button_brand button-light-green">2 CP Visit</button>
@@ -90,5 +90,4 @@
             <div aura:id="calendar"></div> 
         </div>
     </div>
-    
 </aura:component>

@@ -1,7 +1,7 @@
 ({
     doinit : function(component ,event ,helper) {
         debugger;
-        var Wrapper=[];
+        /*var Wrapper=[];
         var MPlist=[];
         var KPIrecord=[];
         var VisitRecord=[];
@@ -34,10 +34,11 @@
                 }
         });
         
-        $A.enqueueAction(action);
+        $A.enqueueAction(action);*/
     },
     parentComponentEvent:function(component ,event ,helper) {
         debugger;
+        var MPlist=[];
         var Month = event.getParam("Month");
         var Year = event.getParam("Year"); 
         component.set("v.selectedMonth",Month);
@@ -58,6 +59,20 @@
                 MPlist=response.getReturnValue();
                 //alert("From server: " + );
                 component.set("v.Weeklybp",MPlist);
+                console.log('MPlist------->',MPlist);
+                
+                // component.set("v.userName",MPlist[0].);
+                
+                if(MPlist.length>0){
+                    component.set("v.mbpStatus",MPlist[0].Status__c);
+                    component.set("v.mbpName",MPlist[0].Name);
+                    component.set("v.month",MPlist[0].Month_Name__c);
+                    component.set("v.ShowToCreateMonthlyBeatPlan",false);
+                }
+                else{
+                   component.set("v.ShowToCreateMonthlyBeatPlan",true); 
+                }
+                     
                 
             }
             else if (state === "INCOMPLETE") {

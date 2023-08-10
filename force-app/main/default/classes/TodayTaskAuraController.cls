@@ -24,12 +24,19 @@ public class TodayTaskAuraController {
                             pendingVisitCount = pendingVisitCount + 1;
                         }
                     }
+                    String userId = userInfo.getUserId();
+                    system.debug('userId::'+userId);
+                    List<Day_Visit_Plan__c> dayVisitList = [SELECT Id FROM Day_Visit_Plan__c WHERE Start_Date__c=today AND Service_Executive__c =: userId];
+                    System.debug('dayVisitList === >'+dayVisitList);
                     System.debug('compVisitCount === >'+compVisitCount);
                     System.debug('pendingVisitCount === >'+pendingVisitCount);
                     todaytaskWrapper wrap = new todaytaskWrapper();
                     wrap.visitList = visitListToShow;
                     wrap.completedVisit = compVisitCount;
                     wrap.pendingVisit = pendingVisitCount;
+                    if(!dayVisitList.isEmpty()){
+                        wrap.dvpList = dayVisitList;
+                    }
                     System.debug('wrap Data === >'+wrap);
                     return wrap;
                 }
@@ -66,6 +73,8 @@ public class TodayTaskAuraController {
         public Integer pendingVisit;
         @AuraEnabled
         public List<Visit__c> visitList;
+        @AuraEnabled
+        public List<Day_Visit_Plan__c> dvpList;
     }
     
     // ==========================================================================================================================================================================================================
@@ -74,13 +83,15 @@ public class TodayTaskAuraController {
     public static Day_Visit_Plan__c StartDayVisitForVistitRecord(String startLat,String startLang,List<Visit__c> visitRecList){
         System.debug('startLat == >'+startLat + ' && startLang === >'+startLang + ' && visitRecList === >'+visitRecList);
         List<Visit__c> visitListToUpdate = new List<Visit__c>();
+        Monthly_Travel_Expense__c mte = [select id from Monthly_Travel_Expense__c limit 1];
         try{
             if(String.isNotBlank(startLat) && string.isNotBlank(startLang)){
                 Day_Visit_Plan__c vstPlan = new Day_Visit_Plan__c();
                 vstPlan.Start_Location__Latitude__s =Decimal.valueOf(startLat);
                 vstPlan.Start_Location__Longitude__s = Decimal.valueOf(startLang);
                 vstPlan.Service_Executive__c = Userinfo.getUserId();
-                vstPlan.Monthly_Travel_Expense__c = 'a8G0k000000RciqEAC';
+                vstPlan.Monthly_Travel_Expense__c = mte.Id;
+                vstPlan.Start_Date__c = system.today();
                 insert vstPlan;
                 if(String.isNotBlank(vstPlan.Id)){
                     for(Visit__c vs : visitRecList){ 
@@ -126,33 +137,21 @@ public class TodayTaskAuraController {
     // ==========================================================================================================================================================================================================
     // Method for Ahmed Visit Update
     @AuraEnabled
-    public static Visit__c updateAmendVisitRecord(string visitId,string visitDescription,string updateVisitDate){
+    public static Visit__c updateAmendVisitRecord(Visit__c visitRec){
         Visit__c vsRec = new Visit__c();
         try{
-            if(string.isNotBlank(visitId)){
-                vsRec.Id = visitId;
+            if(visitRec != null){
+                update visitRec;
             }
-            if(string.isNotBlank(visitDescription)){
-                vsRec.Description__c = visitDescription;
-            }
-            if(string.isNotBlank(updateVisitDate)){
-                String[] arrTest = updateVisitDate.split('T');
-                string[] dateArray = arrTest[0].split('-');
-                Integer year = Integer.valueOf(dateArray[0]);
-                Integer month = Integer.valueOf(dateArray[1]);
-                Integer day = Integer.valueOf(dateArray[2]);
-                date VisitFormatedDate = date.newInstance(year, month, day);
-                vsRec.Actual_visit_date__c = VisitFormatedDate;
-            }
-            update vsRec;
-            System.debug('vsRec === >'+vsRec);
-            return vsRec;
+            System.debug('visitRec === >'+visitRec);
+            return visitRec;
         }catch(Exception e){
             System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
         }
         return null;
     }
-    
+
+    //==========================================================================================================================================================================================================
     @AuraEnabled
     public static void saveTask(Task taskRec){
         try{
@@ -165,7 +164,8 @@ public class TodayTaskAuraController {
             System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
         }
     }
-    
+
+    //==========================================================================================================================================================================================================
     @AuraEnabled
     public static void saveLogCall(Task taskRec){
         try{
@@ -182,6 +182,7 @@ public class TodayTaskAuraController {
         }
     }
     
+    //==========================================================================================================================================================================================================
     @AuraEnabled
     public static void saveOpportunity(Opportunity oppRec){
         try{
@@ -194,6 +195,7 @@ public class TodayTaskAuraController {
         }
     }
     
+    //==========================================================================================================================================================================================================
     @AuraEnabled
     public static void saveCase(Case caseRec){
         try{
@@ -205,4 +207,40 @@ public class TodayTaskAuraController {
             System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
         }
     }
+
+    //==========================================================================================================================================================================================================
+    // Method for Check in on Visit Record
+    @AuraEnabled
+    public static Visit__c  checkInVisitUpdate(String checkInLat,String checkInLang){
+        Visit__c visRec = [SELECT Id,Name,Actual_visit_date__c,CheckIn__Latitude__s,CheckIn__Longitude__s,Visit_Status__c FROM Visit__c WHERE Actual_visit_date__c=TODAY LIMIT 1 ];
+        try{
+            if(String.isNotBlank(checkInLat) && String.isNotBlank(checkInLang) && String.isNotBlank(visRec.Id)){
+                visRec.Id = visRec.Id;
+                visRec.CheckIn__Latitude__s = Decimal.valueOf(checkInLat);
+                visRec.CheckIn__Longitude__s =  Decimal.valueOf(checkInLang);
+                visRec.Visit_Status__c = 'In Progress';
+                visRec.Check_In_Time__c = System.now();
+                update visRec;
+                System.debug('Check In Visit Update Record === >'+visRec);
+                return visRec;
+            }
+        }catch(Exception e){
+            System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
+        }
+       return null;
+    }
+
+    //==========================================================================================================================================================================================================
+    // Method for Check Out in Visit Record
+    public static Visit__c checkOutVisitUpdate(String checkOutLat,string checkOutLong){
+        Visit__c visRec =[SELECT Id,Name,Actual_visit_date__c,CheckIn__Latitude__s,CheckIn__Longitude__s,Visit_Status__c FROM Visit__c WHERE CheckIn__Latitude__s !=null AND CheckIn__Longitude__s !=null LIMIT 1];
+        try{
+            return null;
+        }catch(Exception e){
+            System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
+        }
+        return null;
+    }
+    
+    
 }

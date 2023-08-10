@@ -1,12 +1,16 @@
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" controller="BeatPlannerHelper">
-   
+    
     <!--aura:handler  name="init" value="{!this}" action="{!c.doinit}"/-->
     <aura:attribute name="ShowToCreateMonthlyBeatPlan" type="Boolean" default="false"/>
     <aura:handler name="sampleCmpEvent" event="c:SampleComponentEvent" action="{!c.parentComponentEvent}"/>
-    
+    <aura:attribute name="Weeklybp" type="Monthly_Beat_Plan__c[]" />
     <aura:attribute name="selectedMonth" type="String" />
     <aura:attribute name="selectedYear" type="String" />
-
+    <aura:attribute name="userName" type="String" />
+    <aura:attribute name="month" type="String" />
+    <aura:attribute name="mbpName" type="String" />
+    <aura:attribute name="mbpStatus" type="String" />
+    
     <aura:html tag="style">
         .header {
         background: linear-gradient(to right, #6CA1E9, #DFB5FF);
@@ -124,34 +128,38 @@
         border: none; /* Remove border */
         }
     </aura:html>
-
-    <c:MonthlyContainer></c:MonthlyContainer>
-    <aura:if isTrue="{!v.ShowToCreateMonthlyBeatPlan}">
-            <div style="margin-top:1%; margin-left:0.5%; margin-right:0.5%">
+    <div style="background-color:#ffffff;height:98vh;">
+        <h2 style="color: #0158A5; font-family:revert;font-size:150%;font-weight:550;margin-left:8%;">Beat Planner</h2>
+        <div class="slds-align_absolute-center">
+            <c:MonthlyContainer></c:MonthlyContainer>
+        </div>
+        <aura:if isTrue="{!v.ShowToCreateMonthlyBeatPlan}">
+            <div style="margin-top:1%;">
                 <c:showToCreateMonthlyBeatPlan selectedMonthNumber="{!v.selectedMonthNumber}"/>
             </div>
-        </aura:if>
-        <aura:if isTrue="{!not(v.ShowToCreateMonthlyBeatPlan)}">
-        <div style="height: 100vh;max-width: 2000px; margin: 0 auto;">
-            
-            <div class="header">
-                <div>
-                    <h1 style="margin-bottom:2rem;margin-left:1.9%;font-size: 30px;" class="Mainheading">Aug_Best Plan-1234 Ajeet Kumar</h1>
-                    <div class="leftSidebutton">
-                        <span>Site Visti 12</span>
-                        <span>CP vsist 8</span>
-                        <span>New Patner 9</span>
-                        <span>Other KPI 16</span>
+        </aura:if><br/>
+        <aura:if isTrue="{!v.Weeklybp.length > 0}">
+            <div style="height: 100vh;max-width: 2000px; margin: 0 auto;">
+                <aura:iteration items="{!v.Weeklybp}" var="a"></aura:iteration>
+                <div class="header">
+                    <div>
+                        <h1 style="margin-bottom:2rem;margin-left:1.9%;font-size:30px;" class="Mainheading">{!v.month}-{!v.mbpName}- Ajeet Kumar</h1>
+                        <div class="leftSidebutton">
+                            <span>Site Visti 12</span>
+                            <span>CP vsist 8</span>
+                            <span>New Patner 9</span>
+                            <span>Other KPI 16</span>
+                        </div>
+                    </div>
+                    <div>
+                        <!--a href="javascript:void(0);" class="top-button">Approved</a-->
+                        <span class="top-button">{!v.mbpStatus}</span>
                     </div>
                 </div>
                 <div>
-                    <!--a href="javascript:void(0);" class="top-button">Approved</a-->
-                    <span class="top-button">Approved</span>
+                    <c:fullcalanderComp month="{!v.selectedMonth}" year="{!v.selectedYear}"/>
                 </div>
             </div>
-            <div>
-                <c:fullcalanderComp/>
-            </div>
-        </div>
-</aura:if>
+        </aura:if>
+    </div>
 </aura:component>

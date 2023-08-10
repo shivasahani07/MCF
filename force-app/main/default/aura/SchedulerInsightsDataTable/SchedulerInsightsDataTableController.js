@@ -26,8 +26,8 @@
                 if(data.quoteList !=null && data.quoteList.length >0){
                     component.set("v.QuotList",data.quoteList);
                 }
-                if(data.quoteList !=null && data.quoteList.length >0){
-                    component.set("v.PurchaseOrderList",data.quoteList);
+                if(data.purOrdList !=null && data.purOrdList.length >0){
+                    component.set("v.PurchaseOrderList",data.purOrdList);
                 }
                 if(data.invoList !=null && data.invoList.length >0){
                     component.set("v.InvoiceList",data.invoList);

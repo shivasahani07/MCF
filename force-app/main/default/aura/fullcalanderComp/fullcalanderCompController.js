@@ -8,7 +8,10 @@
         {
             helper.fetchEvents(component);
         }
+    },
+    
+     afterRender: function(component, helper) {
+        this.superAfterRender();
+        helper.setupDraggableEvents(component);
     }
-    
-    
 })

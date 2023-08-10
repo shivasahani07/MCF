@@ -9,8 +9,6 @@
     <!--<aura:registerEvent name="sampleCmpEvent" type="c:SampleComponentEvent" />-->
     
     <div class="slds-m-left_medium slds-m-right_medium " >
-        <h2 style="color: #0158A5; font-family: revert; font-size: 150%; font-weight: 550; padding-top:1%; margin-bottom:0.4%">Travel Insights</h2>
-       
         <aura:if isTrue="{!v.ShowBeatPlannerName}">
         <lightning:layoutItem class="e" size="12" padding="around-large" >
             <div class="slds-grid   NameBar slds-m-horizontal_medium " >
@@ -21,7 +19,7 @@
                         <p style="display: inline; font-size:120%; color:white;">Created Date:&nbsp;<lightning:formattedDateTime value="{!v.MonthlyBeatPlanDataList.CreatedDate}" year="numeric" month="numeric" day="numeric"/> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>    <p style="display: inline; font-size:120%; color:white;">Approved By: Chandan Kumar</p>
                     </div>
                     <div style="margin-top:0.2%" class="slds-col slds-size_1-of-12 ">
-                        <button class="slds-button slds-button_brand" onclick="{! c.handleClick }" >Approved</button>
+                        <div style="background-color:#00C6B7; color:white; padding-left: 12%; height: 48%; padding-top: 3%; width:122%; border-radius: 16px"><b>Approved</b></div>
                     </div>
                 </div>
                 <br/>

@@ -31,6 +31,10 @@
     color:white;
 } 
 
+.THIS .headerButton:disabled {
+    background-color: gray;
+}
+
 .THIS .scrollable-container {
     overflow-x: auto;
     white-space: nowrap;

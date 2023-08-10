@@ -8,58 +8,129 @@ public class BeatPlanController {
     }
     
     @AuraEnabled
-    Public Static void GetAllMonthlyBeatPlanner(String StartDate,String LastDate){
-
+    Public Static void GetAllMonthlyBeatPlanner(String StartDate,String LastDate,List<WrapperClass> WrapperRecList){
+         
+                /*String[] arrTest = StartDate.split('T');
+                string[] dateArray = arrTest[0].split('-');
+                Integer year = Integer.valueOf(dateArray[0]);
+                Integer startmonth = Integer.valueOf(dateArray[1]);
+                Integer day = Integer.valueOf(dateArray[2]);
+                date StartFormatedDate = date.newInstance(year, startmonth, day);
         
-        DateTime startDateTime = DateTime.valueOf(StartDate); // Replace with your actual start date
-        DateTime endDateEndDateTime = DateTime.valueOf(LastDate); // Replace with your actual end date
+                date dt=Date.valueOf(StartDate);
+               DateTime startDateTime = DateTime.valueOf(dt);
+         // Replace with your actual start date
+
+                 String[] arrTestDate = LastDate.split('T');
+                string[] EndArray = arrTestDate[0].split('-');
+                Integer dateyear = Integer.valueOf(EndArray[0]);
+                Integer datemonth = Integer.valueOf(EndArray[1]);
+                Integer dateday = Integer.valueOf(EndArray[2]);
+                date EndFormatedDate = date.newInstance(dateyear, datemonth, dateday);
+                date d=Date.valueOf(LastDate);
+                DateTime endDateEndDateTime = DateTime.valueOf(d); // Replace with your actual end date*/
         Integer weeksBetween = 0;
+       /* Datetime startDateTime=Date.parse('2023-08-01');
+        Datetime endDateEndDateTime=Date.parse(LastDate);*/
        
         System.debug('Weeks between start and end dates: ' + weeksBetween);
  
         Monthly_Beat_Plan__c MBP=new Monthly_Beat_Plan__c();
         List<Weekly_Beat_Plan__c> WBPList=new List<Weekly_Beat_Plan__c>();
+        List<KPI_Target__c> ListKPITarget=new List<KPI_Target__c>();
+
         if(StartDate!=null && LastDate!=null){
+            //Creating Monthly Beat Plan
             MBP.Start_Date__c=Date.valueOf(StartDate);
             MBP.End_Date__c=Date.valueOf(LastDate);
             MBP.Sales_User__c=UserInfo.getUserId(); 
             insert MBP;
-             /*Date SelectedDate=Date.valueOf(StartDate);
+
+             Date SelectedDate=Date.valueOf(StartDate);
+             date firstDate = SelectedDate.toStartOfMonth();
              Integer month = SelectedDate.month();
-             Integer DaysInMonth=date.daysInMonth(SelectedDate.year(), month);
-             Date WeekStartDate=SelectedDate.toStartofWeek();
-             Date WeekEndDate=WeekStartDate.addDays(7);*/
+             Integer DaysInMonth=date.daysInMonth(SelectedDate.year(), month) -1;
+             Date LastDateOfMonth=firstDate.addDays(DaysInMonth);
+
+        Datetime startDateTime=firstDate;
+        Datetime endDateEndDateTime=LastDateOfMonth;
+
+        System.debug('startDateTime ===> ' + startDateTime);
+        System.debug('endDateEndDateTime ===> ' + endDateEndDateTime);
+
             if(MBP.Id!=null){
-
-                Weekly_Beat_Plan__c WBP=new Weekly_Beat_Plan__c();
-                WBP.Monthly_Beat_Plan__c=MBP.Id;
-
-                Date WeekStartDate=Date.valueOf(startDateTime).toStartofWeek();
-                WBP.Start_Day_of_Week__c=WeekStartDate;
-
+                Date NextWeekStartDate;
+                 //Creating Weekly Beat Plan
+                
+              
+                Date WeekStartDate=firstDate;
+                //WBP.Start_Day_of_Week__c=WeekStartDate;
+                //system.debug('WBP.Start_Day_of_Week__c==='+WBP.Start_Day_of_Week__c);
+                integer i= 0;
                 while (startDateTime < endDateEndDateTime) {
-                    if (string.valueof(startDateTime.format('E')) == 'Sun') {
-                          weeksBetween++; 
-                              
-                        if (string.valueof(startDateTime.format('E')) == 'Sun'){
-                                 
-                            WBP.End_Day_of_Week__c=Date.valueOf(LastDate);
-                            WBP.Start_Day_of_Week__c=Date.valueOf(LastDate).addDays(1);
+                    System.debug('startDateTime ====> ' + startDateTime);
+                    System.debug('endDateEndDateTime ====> ' + endDateEndDateTime);
+                        Weekly_Beat_Plan__c WBP=new Weekly_Beat_Plan__c();
+                        WBP.Monthly_Beat_Plan__c=MBP.Id;
+                        date previousWeekEnddate;
+                        // if (WBP.End_Day_of_Week__c != null && previousWeekEnddate > Date.valueOf(startDateTime)) {
+                        //     WBP.Start_Day_of_Week__c=Date.valueOf(startDateTime);
+                        // }
+                                
+                        if (string.valueof(startDateTime.format('E')) == 'Sun'){   
+                            weeksBetween++;    
+                            WBP.End_Day_of_Week__c=Date.valueOf(startDateTime);
+                            if (weeksBetween == 1) {
+
+                                WBP.Start_Day_of_Week__c = (Date.valueOf(StartDate)).toStartOfMonth();
+                            }
+                            else {
+                                WBP.Start_Day_of_Week__c = (WBP.End_Day_of_Week__c).addDays(-6);
+                            }
+                            
+                            previousWeekEnddate = WBP.End_Day_of_Week__c;
+                            system.debug('WBP.Start_Day_of_Week__c==='+WBP.Start_Day_of_Week__c);
+                            WBPList.add(WBP);
+                            System.debug('WBPList =====> ' + WBPList);
                         }
-                              
                         
-                        WBPList.add(WBP);
-                        
-                    }
-                    startDateTime = startDateTime.addDays(1);
+                     startDateTime = startDateTime.addDays(1);
                 }
             }
+            system.debug('WBPList---'+WBPList);
             if(!WBPList.isEmpty()){
                 Insert WBPList;
             }
+
+            if(!WrapperRecList.isEmpty()){
+                  
+                for(WrapperClass rec:WrapperRecList){
+                     
+                    KPI_Target__c KT=new KPI_Target__c();
+                    if(rec.targetvalue!=null && rec.targetvalue!=''){
+                        KT.Roles_and_KPI__c=rec.Id;
+                        KT.Monthly_Beat_Plan__c=MBP.Id;
+                        KT.Target_Count__c=Integer.valueOf(rec.targetvalue);
+                        ListKPITarget.add(KT);
+                    }
+                }  
+            }
+            if(!ListKPITarget.isEmpty()){
+                Insert ListKPITarget;
+            }
+            
         }
-       
               
+    }
+
+    Public Class WrapperClass{
+        
+        @AuraEnabled
+        Public String Id{get;set;}
+        @AuraEnabled
+        Public String Name{get;set;}
+        @AuraEnabled
+        Public string targetvalue{get;set;}
     }
 
     

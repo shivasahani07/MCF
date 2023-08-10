@@ -4,17 +4,18 @@ public class Scheduler_Insights_Handler {
     public static SchedulerInsightsWrapper getAllDateOfSchdeularSight(){
         try{
             List<Visit__c> getAllvisitRecordList = [Select Id,KPI_Target__r.Name,Account__c,Account__r.Name,Lead__c,Lead__r.Name,Start_Date_Time__c,Route__c,Route__r.Name,Visit_Status__c,Monthly_Beat_Plan__c From Visit__c Where KPI_Target__c !=null AND Account__c!=null];
-            List<Lead> getAllLeadReordcList = [Select Id,FirstName,LastName,Email,Phone,Lead_Stage__c From Lead where CreatedById =: userInfo.getUserId() ];
-            List<Event> GetAlleventList = [Select Id,WhoId,Type,EndDateTime,StartDateTime,Description From Event];
-            List<EmailMessage> getAllEmailList = [Select Id,Lead__c,Lead__r.Company,Subject,TextBody,CreatedDate,Opportunity__c,Account__c from EmailMessage Where Lead__c !=null Limit 10];
-            List<Opportunity> getAlloppRecordList = [Select Id,Name,AccountId,Account.Name,Total_Amount__c,StageName,CloseDate,Sales_Note__c,Client_Note__c,OwnerId,Owner.Name From Opportunity];
+            List<Lead> getAllLeadReordcList = [Select Id,FirstName,LastName,Email,Phone,Lead_Stage__c,AccountId__c,Company From Lead where CreatedById =: userInfo.getUserId() ];
+            List<Event> GetAlleventList = [Select Id,WhoId,Who.Name,Type,EndDateTime,StartDateTime,Description From Event];
+            List<EmailMessage> getAllEmailList = [Select Id,Lead__c,Lead__r.Company,Account__r.Name,Subject,TextBody,CreatedDate,Opportunity__c,Account__c from EmailMessage Where Lead__c!=null Limit 10];
+            List<Opportunity> getAlloppRecordList = [Select Id,Name,AccountId,Account.Name,Total_Amount__c,StageName,CloseDate,Sales_Note__c,Client_Note__c,OwnerId,Owner.Name From Opportunity Limit 10];
             List<Opportunity> oppBasedNegoationStageList = [Select Id,Name,AccountId,Account.Name,Total_Amount__c,StageName,CloseDate,Sales_Note__c,Client_Note__c From Opportunity Where StageName = 'Negotiation'];
-            List<Quote> getAllquoteRecordList = [Select Id,Name,AccountId,Account.Name,ExpirationDate,Status,TotalPrice,OpportunityId From Quote Where OpportunityId!=null And AccountId!=null];
+            List<Quote> getAllquoteRecordList = [Select Id,Name,AccountId,Account.Name,ExpirationDate,Status,TotalPrice,OpportunityId From Quote Where AccountId!=null];
             List<Purchase_Order__c> getAllPurchaseOrderRecordList = [Select Id,Name,Order_Status__c,PO_Date__c,Quantity__c From Purchase_Order__c];
-            List<Invoices__c> geAllinvoceRecordList = [Select Id,Name,Payment_Option__c,Payment_Mode__c,Amount__c,Invoice_Date__c,Account__c,Opportunity__c From Invoices__c Where Opportunity__c!=null And Account__c!=null];
-            List<Case> getAllcaseRecordList = [Select Id,CaseNumber,AccountId,Account.Name,Status,CreatedDate,Subject,Description,Origin From Case ];
+            List<Invoices__c> geAllinvoceRecordList = [Select Id,Name,Payment_Option__c,Payment_Mode__c,Amount__c,Invoice_Date__c,Account__c,Opportunity__c From Invoices__c Where Account__c!=null];
+            List<Case> getAllcaseRecordList = [Select Id,CaseNumber,AccountId,Account.Name,Status,CreatedDate,Subject,Description,Origin From Case Where  AccountId !=null Limit 20];
             List<Feedback__c> getAllFeedbackRecordList = [Select Id,Name,Account__c,Description__c,Feedback_Rating__c From Feedback__c Where Account__c!=null];
             List<Day_Visit_Plan__c> getAllDayVisitPlanRecList = [Select Id,Start_Date__c,End_Date__c,Total_Distance__c From Day_Visit_Plan__c];
+            List<KPI_Target__c> getAllKpiTargetRecList  = [Select Id,Monthly_Beat_Plan__c,Roles_and_KPI__c from KPI_Target__c];
             SchedulerInsightsWrapper sw= new  SchedulerInsightsWrapper();
             if(getAllvisitRecordList.size()>0){
                 sw.visitRecList = getAllvisitRecordList;

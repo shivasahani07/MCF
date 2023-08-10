@@ -13,12 +13,14 @@
     <aura:attribute name="selectedValue" type="String"/>
     <aura:attribute name="accountAddress" type="String"/>
     <aura:attribute name="taskRec" type="sObject" default="{sObjectType: 'Task'}"/>
+    <aura:attribute name="callRec" type="sObject" default="{sObjectType: 'Task'}"/>
     <aura:attribute name="oppRec" type="sObject" default="{sObjectType: 'Opportunity'}" />
     <aura:attribute name="caseRec" type="sObject" default="{sObjectType: 'Case'}" />
     <aura:attribute name="visitRec" type="sObject" default="{sObjectType: 'Visit__c'}" />
     <aura:attribute name="accID" type="String" />
     <aura:attribute name="recordID" type="String" />
-    
+    <aura:attribute name="ShowCheckInButton" type="Boolean" default = "false"/>
+    <aura:attribute name="ShowCheckOutButton" type="Boolean" default = "true"/>
     <aura:html tag="style">
         .slds-modal__container { 
         width : 60% !important; max-width : 80% !important; 
@@ -102,24 +104,12 @@
                             <lightning:button onclick="{!c.createOpportunityHandle}" label="New Opportunity" class="visitMainButtons"/>
                             <lightning:button  onclick="{!c.createLogCallHanlde}" label="Log a call" class="visitMainButtons"/>
                             <lightning:button onclick="{!c.createTaskHanlde}" label="Log an Activity" class="visitMainButtons"/>
-                            <lightning:button label="Check-Out" class="visitMainButtons"/>
-                            <lightning:button label="Check-In" class="visitMainButtons"/>
+                            <lightning:button onclick="{!c.checkOutHandler}" label="Check-Out" disabled="{!v.ShowCheckOutButton}" class="visitMainButtons"/>
+                            <lightning:button onclick="{!c.checkInHandler}" label="Check-In" disabled="{!v.ShowCheckInButton}" class="visitMainButtons"/>
                         </lightning:LayoutItem>
                     </lightning:Layout>
                     <lightning:Layout>
-                        <!--lightning:LayoutItem padding="horizontal-small" size="12">
-                            <lightning:tabset>
-                                <lightning:tab label="Item One">
-                                    <c:activityTimelineComponent/>
-                                </lightning:tab>
-                                <lightning:tab label="Item Two" title="2nd tab extended title">
-                                    Two Content !
-                                </lightning:tab>
-                                <lightning:tab label="Item Three">
-                                    Three Content !
-                                </lightning:tab>
-                            </lightning:tabset>
-                        </lightning:LayoutItem-->
+                       
                     </lightning:Layout>
                 </lightning:card>
             </lightning:LayoutItem>
@@ -180,8 +170,8 @@
                             <center style="background: white;"><b>Log a call</b></center>
                             <div class="slds-modal__content slds-p-around_medium alignLeft" id="modal-content-id-1">
                                 <div class="row">
-                                    <lightning:input name="taskSubject" label="Subject" required="true" value="{!v.taskRec.Subject}"/> 
-                                    <lightning:input type="text" name="taskcomments" label="Comments" value="{!v.taskRec.Description}"/>
+                                    <lightning:input name="taskSubject" label="Subject" required="true" value="{!v.callRec.Subject}"/> 
+                                    <lightning:input type="text" name="taskcomments" label="Comments" value="{!v.callRec.Description}"/>
                                 </div>
                             </div>
                             <footer class="slds-modal__footer">

@@ -1,68 +1,72 @@
 <aura:component controller="ProductController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
-	 <aura:attribute name="prodList" type="Product2[]"/>
-     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
-     
-    <div class="slds-m-around--xxx-large">
-        <lightning:card>
-            <aura:set attribute="title">
-                Product
-            </aura:set>
-            
-            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
-                <thead>
-                    <tr class="slds-line-height_reset slds-text-title_caps">
-                        <th  class="slds-is-resizable" scope="col">
-                            <div class="slds-truncate" title="Sr.No">
-                                Sr.No
-                            </div>
-                        </th>
-                        <th  class="slds-is-resizable" scope="col">
-                            <div class="slds-truncate" title="Product Name">
-                                Product Name
-                            </div>
-                        </th>
-                        <th class="slds-is-resizable" scope="col">
-                            <div class="slds-truncate" title="Product Code">
-                                Product Code
-                            </div>
-                        </th>
-                        <th class="slds-is-resizable" scope="col">
-                            <div class="slds-truncate" title="Quantity">
-                                Available Quantity/Amount
-                            </div>
-                        </th>
-                        
-                    </tr>
-                </thead>
-                <aura:if isTrue="{!v.prodList.length > 0}">
-                    <tbody>
-                        <aura:iteration items="{!v.prodList}" var="prod" indexVar ="i">
-                            <tr class="slds-hint-parent">
-                                 
-                                <th data-label="Sr.No" scope="row">
-                                    <div class="slds-truncate" title="{!prod.Name}">{!i+1}</div>
+    <aura:attribute name="prodList" type="Product2[]"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    
+    <lightning:layout >
+        <lightning:layoutItem size="12">
+            <div class="slds-m-around--xxx-large">
+                <lightning:card>
+                    <aura:set attribute="title">
+                        Product
+                    </aura:set>
+                    
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                        <thead class="header">
+                            <tr class="slds-line-height_reset slds-text-title_caps">
+                                <th  class="slds-is-resizable" scope="col">
+                                    <div class="slds-truncate" title="Sr.No">
+                                        Sr.No
+                                    </div>
                                 </th>
-                                <td data-label="Product Name">
-                                    <div class="slds-truncate" title="{!prod.Name}">{!prod.Name}</div>
-                                </td>
-                                <td data-label="Product Code">
-                                    <div class="slds-truncate" title="{!prod.ProductCode}">{!prod.ProductCode}</div>
-                                </td>
-                                <td data-label="Available Amount/Quantity">
-                                    <div class="slds-truncate" title=""></div>
-                                </td>
+                                <th  class="slds-is-resizable" scope="col">
+                                    <div class="slds-truncate" title="Product Name">
+                                        Product Name
+                                    </div>
+                                </th>
+                                <th class="slds-is-resizable" scope="col">
+                                    <div class="slds-truncate" title="Product Code">
+                                        Product Code
+                                    </div>
+                                </th>
+                                <th class="slds-is-resizable" scope="col">
+                                    <div class="slds-truncate" title="Quantity">
+                                        Available Quantity/Amount
+                                    </div>
+                                </th>
                                 
-                                 
                             </tr>
-                        </aura:iteration>
-                    </tbody>
-                </aura:if>
-            </table>
-            <aura:if isTrue="{!empty(v.prodList)}">
-                <div class="slds-align_absolute-center">
-                    No records found
-                </div>
-            </aura:if>
-        </lightning:card>
-    </div>
+                        </thead>
+                        <aura:if isTrue="{!v.prodList.length > 0}">
+                            <tbody>
+                                <aura:iteration items="{!v.prodList}" var="prod" indexVar ="i">
+                                    <tr class="slds-hint-parent">
+                                        
+                                        <th data-label="Sr.No" scope="row">
+                                            <div class="slds-truncate" title="{!prod.Name}">{!i+1}</div>
+                                        </th>
+                                        <td data-label="Product Name">
+                                            <div class="slds-truncate" title="{!prod.Name}">{!prod.Name}</div>
+                                        </td>
+                                        <td data-label="Product Code">
+                                            <div class="slds-truncate" title="{!prod.ProductCode}">{!prod.ProductCode}</div>
+                                        </td>
+                                        <td data-label="Available Amount/Quantity">
+                                            <div class="slds-truncate" title=""></div>
+                                        </td>
+                                        
+                                        
+                                    </tr>
+                                </aura:iteration>
+                            </tbody>
+                        </aura:if>
+                    </table>
+                    <aura:if isTrue="{!empty(v.prodList)}">
+                        <div class="slds-align_absolute-center">
+                            No records found
+                        </div>
+                    </aura:if>
+                </lightning:card>
+            </div>
+        </lightning:layoutItem>
+    </lightning:layout>
 </aura:component>

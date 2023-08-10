@@ -1,17 +1,40 @@
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
-	<div class="page-right">
-            <lightning:layout multipleRows="true">
-                <lightning:layoutItem size="2" padding="around-small">
-                    <div><lightning:button variant="brand" label="Component 2" onclick="{!c.navigate}" /><br/></div>
-                    <div><lightning:button variant="brand" label="Dashboard" onclick="{!c.navigateDB}" /><br/></div>
-                    <div><lightning:button variant="brand" label="Products" onclick="{!c.navigateProd}" /><br/></div>
-                    <div><lightning:button variant="brand" label="Live Inventory" onclick="{!c.navigateLivInv}" /><br/></div>
-                    <div><lightning:button variant="brand" label="Orders" onclick="{!c.navigateOrd}" /><br/></div>
-                    <div><lightning:button variant="brand" label="Invoices" onclick="{!c.navigateInv}" /><br/></div>
-                </lightning:layoutItem>
-                <lightning:layoutItem size="10" padding="around-small">
-                    
-                </lightning:layoutItem>
-            </lightning:layout>
-    </div>
+    
+    <aura:attribute name="dashBoard" type="boolean" default="false"/>
+    <aura:attribute name="product" type="boolean" default="false"/>
+    <aura:attribute name="livInventory" type="boolean" default="false"/>
+    <aura:attribute name="order" type="boolean" default="false"/>
+    <aura:attribute name="invoice" type="boolean" default="false"/>
+    
+    
+    <lightning:layout multipleRows="true">
+        <lightning:layoutItem size="2" padding="around-small">
+            <div><lightning:button variant="brand" label="Dashboard" onclick="{!c.navigateDB}" /><br/></div>
+            <div><lightning:button variant="brand" label="Products" onclick="{!c.navigateProd}" /><br/></div>
+            <div><lightning:button variant="brand" label="Live Inventory" onclick="{!c.navigateLivInv}" /><br/></div>
+            <div><lightning:button variant="brand" label="Orders" onclick="{!c.navigateOrd}" /><br/></div>
+            <div><lightning:button variant="brand" label="Invoices" onclick="{!c.navigateInv}" /><br/></div>
+        </lightning:layoutItem>
+        <lightning:layoutItem size="10" padding="around-small">
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Modal header</h1>
+            </div>
+            <aura:if isTrue="{!v.dashBoard}">
+                <c:DealerDashboardCmp/>
+            </aura:if>
+            <aura:if isTrue="{!v.product}">
+                <c:ProductTableCmp/>
+            </aura:if>
+            <aura:if isTrue="{!v.livInventory}">
+                <c:LiveInventoryTableCmp/>
+            </aura:if>
+            <aura:if isTrue="{!v.order}">
+                <c:OrderTableCmp/>
+            </aura:if>
+            <aura:if isTrue="{!v.invoice}">
+                <c:InvoiceTableCmp/>
+            </aura:if>
+        </lightning:layoutItem>
+    </lightning:layout>
+    
 </aura:component>

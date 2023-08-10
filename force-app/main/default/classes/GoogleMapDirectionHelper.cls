@@ -17,13 +17,7 @@ public with sharing class GoogleMapDirectionHelper {
             Account acc = [SELECT Id,Name,Geo_Location__Latitude__s,Geo_Location__Longitude__s,BillingStreet,BillingCity,BillingState,BillingPostalCode,BillingCountry 
                             FROM Account
                             Where Id =: AccrecordId];
-            
-            // List<String> addresses = new List<String>(); //{'1600 Amphitheatre Parkway, Mountain View, CA','1 Infinite Loop, Cupertino, CA' }
-            // addresses.add(acc.BillingStreet);
-            // addresses.add(acc.BillingCity);
-            // addresses.add(acc.BillingState);
-            // addresses.add(acc.BillingCountry);
-            // addresses.add(acc.BillingPostalCode);
+                            
             String address = acc.BillingStreet + ', '+acc.BillingCity+ ', '+acc.BillingState+ ', '+acc.BillingPostalCode + ', '+acc.BillingCountry;
 
             Map<String, String> GoogleLatlongMap = getLongandLat(address);
@@ -40,15 +34,6 @@ public with sharing class GoogleMapDirectionHelper {
                 Destlongitude = GoogleLatlongMap.get('lang');
                 visitwrap.destLong = Destlongitude;
             }
-            /*for (String address : addressToLatLngMap.keySet()) {
-                Decimal[] latLng = addressToLatLngMap.get(address);
-                Decimal latitude = latLng[0];
-                Decimal longitude = latLng[1];
-                
-                System.debug('Address: ' + address);
-                System.debug('Latitude: ' + latitude);
-                System.debug('Longitude: ' + longitude);
-            }*/
 
             List<Day_Visit_Plan__c> dayvisitPlanList = [SELECT CreatedDate,End_Location__c,End_Location__Latitude__s,End_Location__Longitude__s,Id,Monthly_Travel_Expense__c,Name,Service_Executive__c,Start_Day__c,Start_Location__c,Start_Location__Latitude__s,Start_Location__Longitude__s,Total_Covered_Distance__c,Total_Distance__c FROM Day_Visit_Plan__c
                                     Where Service_Executive__c =:CurrentUserRecId AND CreatedDate = TODAY order by createdDate LIMIT 1];

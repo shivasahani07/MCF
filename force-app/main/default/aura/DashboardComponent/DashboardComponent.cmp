@@ -50,7 +50,7 @@
                                 <c:ShowSchedulerInsightsComponent/>
                             </aura:if>
                             <aura:if isTrue="{!v.showtabfive}">
-                                <c:TravelInsightsComponent/>
+                                <c:ShowTravelInsightComponent/>
                             </aura:if>
                         </lightning:layoutItem>
                     </lightning:layout>

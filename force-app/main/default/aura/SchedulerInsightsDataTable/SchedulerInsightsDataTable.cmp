@@ -171,9 +171,12 @@
                                             </div>
                                         </td>
                                         <td scope="row" data-label="Name">
-                                            <div class="slds-text-align_left slds-has-flexi-truncate">
+                                            <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
+                                                                                                             width: 9rem; 
+                                                                                                             overflow: hidden;
+                                                                                                             text-overflow: ellipsis;">
                                                 
-                                                <b style="color:#6592FD;">{!lead.Name}</b>
+                                                <b style="color:#6592FD;">{!lead.Company}</b>
                                             </div>
                                         </td>
                                         <td scope="row" data-label="Route">
@@ -274,7 +277,7 @@
                                         <td scope="row" data-label="Name">
                                             <div class="slds-text-align_left slds-has-flexi-truncate">
                                                 
-                                                <b style="color:#6592FD;">{!event.Name}</b>
+                                                <b style="color:#6592FD;">{!event.Who.Name}</b>
                                             </div>
                                         </td>
                                         <td scope="row" data-label="Route">
@@ -470,7 +473,7 @@
                                         </td>
                                         <td scope="row" data-label="Name">
                                             <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
-                                                                                                             width: 8rem; 
+                                                                                                             width: 7rem; 
                                                                                                              overflow: hidden;
                                                                                                              text-overflow: ellipsis;">
                                                 
@@ -479,7 +482,7 @@
                                         </td>
                                         <td scope="row" data-label="Route">
                                             <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
-                                                                                                             width: 8rem; 
+                                                                                                             width: 7rem; 
                                                                                                              overflow: hidden;
                                                                                                              text-overflow: ellipsis;"
                                                  title="{!opp.Name}">{!opp.Name}</div>
@@ -996,7 +999,7 @@
                                         </td>
                                         <td scope="row" data-label="Route">
                                             <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
-                                                                                                             width: 10rem; 
+                                                                                                             width: 9rem; 
                                                                                                              overflow: hidden;
                                                                                                              text-overflow: ellipsis;"
                                                  title="{!tic.Subject}">{!tic.Subject}</div>
@@ -1004,7 +1007,7 @@
                                         
                                         <td scope="row" data-label="Name">
                                             <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
-                                                                                                             width: 10rem; 
+                                                                                                             width: 9rem; 
                                                                                                              overflow: hidden;
                                                                                                              text-overflow: ellipsis;">
                                                 <b style="color:#6592FD;">{!tic.Description}</b>
@@ -1077,7 +1080,7 @@
                                         </td>
                                         <td scope="row" data-label="Route">
                                             <div class="slds-text-align_left slds-has-flexi-truncate" style="white-space: nowrap; 
-                                                                                                             width: 20rem; 
+                                                                                                             width: 16rem; 
                                                                                                              overflow: hidden;
                                                                                                              text-overflow: ellipsis;"
                                                  title="{!feedback.Description__c}">{!feedback.Description__c}</div>

@@ -3,7 +3,11 @@
     <aura:handler name="sampleCmpEvent" event="c:SampleComponentEvent" action="{!c.parentComponentEvent}"/>
     <aura:attribute name="selectedMonthNumber" type="Integer" />
     
-    <div style="background: #F3F3F3; margin-left: -3%; margin-right: -2%; margin-top: -3%;margin-bottom: -13%;height:650%">
+    <div style="background: #F3F3F3; margin-left: -3%; margin-right: -2%; margin-top: -3%;margin-bottom: -13%;">
+        <div >
+          <c:SchedulerDayBarComponent/>
+        </div>
+        
         <div>
           <c:SchedulerInsightsMonthYear selectedMonthNumber="{!v.selectedMonthNumber}"/>
         </div>

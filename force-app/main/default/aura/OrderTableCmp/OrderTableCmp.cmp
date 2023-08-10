@@ -1,0 +1,77 @@
+<aura:component controller="OrderController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	<aura:attribute name="ordList" type="Order[]"/>
+     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+     
+    <div class="slds-m-around--xxx-large">
+       
+        <lightning:card>
+            <aura:set attribute="title">
+                Orders
+            </aura:set>
+            
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                <thead>
+                    <tr class="slds-line-height_reset slds-text-title_caps">
+                        <th  class="slds-is-resizable" scope="col">
+                            <div class="slds-truncate" title="Sr.No">
+                                Sr.No
+                            </div>
+                        </th>
+                        <th  class="slds-is-resizable" scope="col">
+                            <div class="slds-truncate" title="Product Name">
+                                Order Id
+                            </div>
+                        </th>
+                        <th class="slds-is-resizable" scope="col">
+                            <div class="slds-truncate" title="Product Code">
+                                Order Stage
+                            </div>
+                        </th>
+                        <th class="slds-is-resizable" scope="col">
+                            <div class="slds-truncate" title="Quantity">
+                                Order Placed On
+                            </div>
+                        </th>
+                        <th class="slds-is-resizable" scope="col">
+                            <div class="slds-truncate" title="Quantity">
+                                Order Delivery Date
+                            </div>
+                        </th>
+                        
+                    </tr>
+                </thead>
+                <aura:if isTrue="{!v.ordList.length > 0}">
+                    <tbody>
+                        <aura:iteration items="{!v.ordList}" var="ord" indexVar ="i">
+                            <tr class="slds-hint-parent">
+                                 
+                                <th data-label="Sr.No" scope="row">
+                                    <div class="slds-truncate" title="{!ord.SrNo}"> {!i+1}</div>
+                                </th>
+                                <td data-label="Order Id">
+                                    <div class="slds-truncate" title="{!ord.OrderNumber}">{!ord.OrderNumber}</div>
+                                </td>
+                                <td data-label="Order Stage">
+                                    <div class="slds-truncate" title="{!ord.Status}">{!ord.Status}</div>
+                                </td>
+                                <td data-label="Order Placed On">
+                                    <!--<div class="slds-truncate" title="{!ord.EffectiveDate}">{!ord.EffectiveDate}</div>-->
+                                    <lightning:formattedDateTime value="{!ord.EffectiveDate}" year="numeric" month="numeric" day="numeric"  />
+                                    
+                                </td>
+                                <td data-label="Order Delivery Date">
+                                    <lightning:formattedDateTime value="{!ord.EndDate}" year="numeric" month="numeric" day="numeric"  />
+                                </td>    
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                </aura:if>
+            </table>
+            <aura:if isTrue="{!empty(v.ordList)}">
+                <div class="slds-align_absolute-center">
+                    No records found
+                </div>
+            </aura:if>
+        </lightning:card>
+    </div>
+</aura:component>

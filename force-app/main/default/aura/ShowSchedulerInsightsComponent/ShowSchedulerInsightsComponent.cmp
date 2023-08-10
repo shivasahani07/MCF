@@ -1,0 +1,24 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    <aura:attribute name="ShowToCreateMonthlyBeatPlan" type="Boolean" default="false"/>
+    <aura:handler name="sampleCmpEvent" event="c:SampleComponentEvent" action="{!c.parentComponentEvent}"/>
+    <aura:attribute name="selectedMonthNumber" type="Integer" />
+    
+    <div style="background: #F3F3F3; margin-left: -3%; margin-right: -2%; margin-top: -3%;margin-bottom: -13%;height:650%">
+        <div>
+          <c:SchedulerInsightsMonthYear selectedMonthNumber="{!v.selectedMonthNumber}"/>
+        </div>
+        <aura:if isTrue="{!not(v.ShowToCreateMonthlyBeatPlan)}">
+        <div style="margin-left:0.5%">
+           <c:SchedulerInsightsProgressRing/>
+        </div>
+        <div style="margin-top:1%; margin-left:0.5%; margin-right:0.5%">
+           <c:SchedulerInsightsDataTable/>
+        </div>
+        </aura:if>
+        <aura:if isTrue="{!v.ShowToCreateMonthlyBeatPlan}">
+            <div style="margin-top:1%; margin-left:0.5%; margin-right:0.5%">
+                <c:showToCreateMonthlyBeatPlan selectedMonthNumber="{!v.selectedMonthNumber}"/>
+            </div>
+        </aura:if>
+    </div>
+</aura:component>

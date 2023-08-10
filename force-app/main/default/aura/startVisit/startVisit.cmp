@@ -1,0 +1,277 @@
+<aura:component controller="TodayTaskAuraController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    <aura:attribute name="atr1" type="string" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:attribute name="showCreateTask" type="boolean" default="false"/>
+    <aura:attribute name="showCreateCallLogTask" type="boolean" default="false"/>
+    <aura:attribute name="showCreateCase" type="boolean" default="false"/>
+    <aura:attribute name="showOpportunityCreate" type="boolean" default="false"/>
+    <aura:attribute name="StatuspickValues" type="List" default="['Not Started', 'In Progress', 'Completed']" />
+    <aura:attribute name="PrioritypickValues" type="List" default="['High', 'Normal', 'Low']" />
+    <aura:attribute name="CaseStatuspickValues" type="List" default="['New', 'Working', 'Escalated', 'Closed']" />
+    <aura:attribute name="OppStageNamepickValues" type="List" default="['New', 'Working', 'Escalated', 'Closed']" />
+    <aura:attribute name="selectedValue" type="String"/>
+    <aura:attribute name="accountAddress" type="String"/>
+    <aura:attribute name="taskRec" type="sObject" default="{sObjectType: 'Task'}"/>
+    <aura:attribute name="oppRec" type="sObject" default="{sObjectType: 'Opportunity'}" />
+    <aura:attribute name="caseRec" type="sObject" default="{sObjectType: 'Case'}" />
+    <aura:attribute name="visitRec" type="sObject" default="{sObjectType: 'Visit__c'}" />
+    <aura:attribute name="accID" type="String" />
+    <aura:attribute name="recordID" type="String" />
+    
+    <aura:html tag="style">
+        .slds-modal__container { 
+        width : 60% !important; max-width : 80% !important; 
+        } 
+    </aura:html>
+    
+    
+    <!--div style="margin-top:1%"-->
+        <lightning:Layout multipleRows="true">
+            
+            <!--lightning:LayoutItem padding="horizontal-small" size="12"-->
+                <lightning:LayoutItem size="12">
+                <div class="page-section page-header float-child">
+                    <lightning:Layout>
+                        <lightning:LayoutItem size="2">
+                            <div style="padding:3%; position:relative; top:-27%; display:inline-block;">
+                                <lightning:icon variant="inverse" iconName="utility:back" alternativeText="Utility image" title="Image" />
+                            </div>
+                            <div style="padding:3%; position:relative; top:-27%; display:inline-block;">
+                                <lightning:icon variant="inverse" iconName="standard:contact_list" alternativeText="Utility image" title="Image" />
+                            </div>
+                        </lightning:LayoutItem>
+                        <lightning:LayoutItem size="10">
+                            <div style="padding:0%; position:relative; top:-18%; display:inline-block;"><h1 style="color:white; font-size:170%;">{!v.visitRec.Account__r.Name}</h1></div>
+                        </lightning:LayoutItem>
+                    </lightning:Layout>
+                </div>
+            </lightning:LayoutItem>
+            
+            <!--lightning:LayoutItem padding="horizontal-small" size="12"-->
+                <lightning:LayoutItem size="12">
+                <lightning:card>
+                    <lightning:Layout>
+                        <lightning:LayoutItem size="12">
+                            
+                            <lightning:Layout>
+                                <lightning:LayoutItem  size="3">
+                                    <div style=" padding-left: 12%; padding-bottom: 5%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Beat Id:</div>
+                                    <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Name}</div>
+                                </lightning:LayoutItem>
+                                <lightning:LayoutItem size="6">
+                                    <div style=" padding-left: 12%; padding-bottom: 5%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Website:</div>
+                                    <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Account__r.Website}</div>
+                                </lightning:LayoutItem>
+                                <lightning:LayoutItem size="3">
+                                    <div style=" padding-left: 12%; padding-bottom: 5%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Phone:</div>
+                                    <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Account__r.Phone}</div>
+                                </lightning:LayoutItem>
+                            </lightning:Layout>
+                        </lightning:LayoutItem>
+                    </lightning:Layout>
+                    
+                    <lightning:Layout>
+                        <lightning:LayoutItem size="12">
+                            <lightning:Layout>
+                                <lightning:LayoutItem  size="3">
+                                    <div style=" padding-left: 12%; padding-bottom: 1%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Email:</div>
+                                    <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Account__r.Email__c}</div>
+                                </lightning:LayoutItem>
+                                <lightning:LayoutItem size="6">
+                                    <div style=" padding-left: 12%; padding-bottom: 1%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block; position: relative;top: -63%;">Address:</div>
+                                    <div style=" padding-left: 1%; padding-bottom: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block; max-width: 76%">{!v.accountAddress}</div>
+                                </lightning:LayoutItem>
+                                <lightning:LayoutItem size="3">
+                                    <div style=" padding-left: 12%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Visit Time:</div>
+                                    <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Account__r.Visit_Time__c}</div>
+                                </lightning:LayoutItem>
+                            </lightning:Layout>
+                            
+                        </lightning:LayoutItem>
+                    </lightning:Layout>
+                </lightning:card>
+            </lightning:LayoutItem>
+            
+            <!--lightning:LayoutItem padding="around-small" size="12"-->
+                <lightning:LayoutItem size="12" class="buttonCard">
+                <lightning:card >
+                    <lightning:Layout>
+                        <lightning:LayoutItem padding="around-small" size="12">
+                            <lightning:button onclick="{!c.createCaseHanlde}" label="New Ticket" class="visitMainButtons"/>
+                            <lightning:button onclick="{!c.createOpportunityHandle}" label="New Opportunity" class="visitMainButtons"/>
+                            <lightning:button  onclick="{!c.createLogCallHanlde}" label="Log a call" class="visitMainButtons"/>
+                            <lightning:button onclick="{!c.createTaskHanlde}" label="Log an Activity" class="visitMainButtons"/>
+                            <lightning:button label="Check-Out" class="visitMainButtons"/>
+                            <lightning:button label="Check-In" class="visitMainButtons"/>
+                        </lightning:LayoutItem>
+                    </lightning:Layout>
+                    <lightning:Layout>
+                        <!--lightning:LayoutItem padding="horizontal-small" size="12">
+                            <lightning:tabset>
+                                <lightning:tab label="Item One">
+                                    <c:activityTimelineComponent/>
+                                </lightning:tab>
+                                <lightning:tab label="Item Two" title="2nd tab extended title">
+                                    Two Content !
+                                </lightning:tab>
+                                <lightning:tab label="Item Three">
+                                    Three Content !
+                                </lightning:tab>
+                            </lightning:tabset>
+                        </lightning:LayoutItem-->
+                    </lightning:Layout>
+                </lightning:card>
+            </lightning:LayoutItem>
+            
+            
+            <aura:if isTrue="{!v.showCreateTask}">
+                <div>
+                    <section role="dialog" tabindex="-1" aria-label="Meaningful description of the modal content" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container" >
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.closeActivityCreate}">
+                                    <lightning:icon iconName="utility:close" size="small" variant="neutral"/>
+                                    <span class="slds-assistive-text">Close</span>
+                                </button>
+                            </header>
+                            <center style="background: white;"><b>New Task</b></center>
+                            <div class="slds-modal__content slds-p-around_medium alignLeft" id="modal-content-id-1">
+                                <div class="row">
+                                    <lightning:input name="taskSubject" label="Subject" required="true" value="{!v.taskRec.Subject}"/> 
+                                    <lightning:select aura:id="fieldStatus" label="Status"  required="true" onchange="{!c.onChangeHandlerStatus}" value="{!v.taskRec.Status}">
+                                        <option value="">--None--</option>
+                                        <aura:iteration items="{!v.StatuspickValues}" var="val">
+                                            <option value="{!val}"> {!val}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <lightning:select aura:id="fieldPrority" label="Priority"  required="true" onchange="{!c.onChangeHandlerPriority}" value="{!v.taskRec.Priority}">
+                                        <option value="">--None--</option>
+                                        <aura:iteration items="{!v.PrioritypickValues}" var="val">
+                                            <option value="{!val}"> {!val}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <lightning:input type="date" name="taskduedate" label="Due Date" value="{!v.taskRec.ActivityDate}"/>
+                                </div>
+                            </div>
+                            <footer class="slds-modal__footer">
+                               <div class="slds-align_absolute-center">
+                                    <lightning:button label="Cancel" variant="destructive" class="slds-m-top--medium"   onclick="{!c.closeActivityCreate}"/>
+                                    <lightning:button label="Submit" variant="brand" class="slds-m-top--medium" onclick="{!c.saveTaskHandler}"/>
+                                </div>
+                            </footer>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </div>
+            </aura:if>
+            
+            
+            <aura:if isTrue="{!v.showCreateCallLogTask}">
+                <div>
+                    <section role="dialog" tabindex="-1" aria-label="Meaningful description of the modal content" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container" >
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.closeCallLogCreate}">
+                                    <lightning:icon iconName="utility:close" size="small" variant="neutral"/>
+                                    <span class="slds-assistive-text">Close</span>
+                                </button>
+                            </header>
+                            <center style="background: white;"><b>Log a call</b></center>
+                            <div class="slds-modal__content slds-p-around_medium alignLeft" id="modal-content-id-1">
+                                <div class="row">
+                                    <lightning:input name="taskSubject" label="Subject" required="true" value="{!v.taskRec.Subject}"/> 
+                                    <lightning:input type="text" name="taskcomments" label="Comments" value="{!v.taskRec.Description}"/>
+                                </div>
+                            </div>
+                            <footer class="slds-modal__footer">
+                              <div class="slds-align_absolute-center">
+                                    <lightning:button label="Cancel" variant="destructive" class="slds-m-top--medium"   onclick="{!c.closeCallLogCreate}"/>
+                                    <lightning:button label="Submit" variant="brand" class="slds-m-top--medium" onclick="{!c.saveLogCall}"/>
+                                </div>
+                            </footer>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </div>
+            </aura:if>
+            
+            <aura:if isTrue="{!v.showCreateCase}">
+                <div>
+                    <section role="dialog" tabindex="-1" aria-label="Meaningful description of the modal content" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container" >
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.closeCaseHanlde}">
+                                    <lightning:icon iconName="utility:close" size="small" variant="neutral"/>
+                                    <span class="slds-assistive-text">Close</span>
+                                </button>
+                            </header>
+                            <center style="background: white;"><b>New Case</b></center>
+                            <div class="slds-modal__content slds-p-around_medium alignLeft" id="modal-content-id-1">
+                                <div class="row">
+                                    <lightning:select aura:id="fieldCaseStatus" label="Status"  required="true" onchange="{!c.onChangeHandlerCaseStatus}" value="{!v.caseRec.Status}">
+                                        <option value="">--None--</option>
+                                        <aura:iteration items="{!v.CaseStatuspickValues}" var="val">
+                                            <option value="{!val}"> {!val}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <lightning:input name="taskSubject" label="Subject" required="true" value="{!v.caseRec.Subject}"/> 
+                                    <lightning:input type="text" name="taskcomments" label="Comments" value="{!v.caseRec.Description}"/>
+                                </div>
+                            </div>
+                            <footer class="slds-modal__footer">
+                                <div class="slds-align_absolute-center">
+                                    <lightning:button label="Cancel" variant="destructive" class="slds-m-top--medium"   onclick="{!c.closeCaseHanlde}"/>
+                                    <lightning:button label="Submit" variant="brand" class="slds-m-top--medium" onclick="{!c.createCaseHandle}"/>
+                                </div>                            
+                            </footer>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </div>
+            </aura:if>
+            
+            <aura:if isTrue="{!v.showOpportunityCreate}">
+                <div>
+                    <section role="dialog" tabindex="-1" aria-label="Meaningful description of the modal content" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container" >
+                            <header class="slds-modal__header">
+                                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick="{!c.closeOpportunityHandle}">
+                                    <lightning:icon iconName="utility:close" size="small" variant="neutral"/>
+                                    <span class="slds-assistive-text">Close</span>
+                                </button>
+                            </header>
+                            <center style="background: white;"><b>New Opportunity</b></center>
+                            <div class="slds-modal__content slds-p-around_medium alignLeft" id="modal-content-id-1">
+                                <div class="row">
+                                    <lightning:input name="RequestName" label="Requisition Name" required="true" value="{!v.oppRec.Name}"/> 
+                                    <!--lightning:input name="oppName" label="Opportunity Name" required="true" value="{!v.oppRec.Name}"/--> 
+                                    <lightning:select aura:id="fieldOppStage" label="Status"  required="true" onchange="{!c.onChangeHandlerOppStage}" value="{!v.oppRec.StageName}">
+                                        <option value="">--None--</option>
+                                        <aura:iteration items="{!v.OppStageNamepickValues}" var="val">
+                                            <option value="{!val}"> {!val}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    
+                                    <lightning:input type="date" name="oppclosedate" required="true" label="Close Date" value="{!v.oppRec.CloseDate}"/>
+                                </div>
+                            </div>
+                            <footer class="slds-modal__footer ">
+                                <div class="slds-align_absolute-center">
+                                    <lightning:button label="Cancel" variant="destructive" class="slds-m-top--medium"   onclick="{!c.closeOpportunityHandle}"/>
+                                    <lightning:button label="Submit" variant="brand" class="slds-m-top--medium" onclick="{!c.createOppHandle}"/>
+                                </div>
+                                
+                            </footer>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </div>
+            </aura:if>
+            
+        </lightning:Layout>
+        
+        
+        
+    <!--/div-->
+</aura:component>

@@ -119,11 +119,15 @@ public class TodayTaskAuraController {
     @AuraEnabled
     public static Day_Visit_Plan__c updateEndDayVisitRecord(String endLat,String endLong,String dayvisitId){
         Day_Visit_Plan__c  vstPlan = new Day_Visit_Plan__c();
+        vstPlan = [select id from Day_Visit_Plan__c where Service_Executive__c =:UserInfo.getUserId() and Start_Date__c = today];
         try{
-            if(String.isNotBlank(endLat) && String.isNotBlank(endLat) && String.isNotBlank(dayvisitId)){
-                vstPlan.Id = dayvisitId;
+            if(vstPlan != null){
+                vstPlan.Id = vstPlan.Id;
+                if(endLat != null)
                 vstPlan.End_Location__Latitude__s = Decimal.valueOf(endLat);
+                if(endLong != null)
                 vstPlan.End_Location__Longitude__s = Decimal.valueOf(endLong);
+                vstplan.End_Date__c = system.now();
                 update vstPlan;
                 System.debug('Updated Day Visit Plan Record ==== >'+vstPlan);
                 return vstPlan;

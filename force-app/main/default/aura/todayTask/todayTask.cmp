@@ -29,7 +29,7 @@
     <aura:attribute name="mapMarkers" type="Object"/>
     <aura:attribute name="zoomLevel" type="Integer" />
     <aura:attribute name="dayForFilter" type="String"/>
-    
+    <aura:attribute name="nextCounter" type="Integer" default="0"/>
     
     <div class="c-container" style="background: #F3F3F3; margin-left: -3%; margin-right: -2%; margin-top: -3%;margin-bottom: -13%;">
         <aura:if isTrue="{!v.showTodaysTaskComponent}">

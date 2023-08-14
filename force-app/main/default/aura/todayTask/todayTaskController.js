@@ -55,6 +55,7 @@
                     }
                 }*/
         
+        
         const startDate = new Date(); // You can replace this with your start date
         const numDays = 7; // Number of days to show in the top bar
         const dates = [];
@@ -172,6 +173,46 @@
             }
         });
         $A.enqueueAction(action);
-    }
+    },
     
+    handleNextClicked : function(component, event, helper){
+        debugger;
+        var counter = component.get("v.nextCounter") + 1;
+        component.set("v.nextCounter",counter);
+        let curr = new Date();
+        var date = new Date();
+        date.setDate(date.getDate() + (7 * counter));
+        console.log(date);
+        let week = []
+        const dates = [];
+        curr = date;
+        for (let i = 1; i <= 7; i++) {
+               let first = curr.getDate() - curr.getDay() + i;
+               let weekDate = new Date(curr.setDate(first)).toISOString().slice(0, 10);
+               week.push(weekDate);
+            const newDate = new Date(weekDate);
+            //newDate.setDate(weekDate.getDate() + i);
+            var dateObj = {day:'', fullDate:'', month:''};
+            dateObj.fullDate = newDate.toISOString().slice(0, 10);
+            dateObj.day = newDate.toISOString().slice(8,10);
+            //dateObj.month = MonthName;
+            dates.push(dateObj);
+               
+          }
+        component.set("v.dates", dates);
+        
+        var curr1 = new Date; // get current date
+        var first = curr1.getDate() - curr1.getDay(); // First day is the day of the month - the day of the week
+        var last = first + 6; // last day is the first day + 6
+        
+        var firstday = new Date(curr1.setDate(first)).toUTCString();
+        var lastday = new Date(curr1.setDate(last)).toUTCString();
+        console.log('firstday::'+firstday);
+        console.log('lastday::'+lastday);
+        
+        
+        
+        
+    }
+ 
 })

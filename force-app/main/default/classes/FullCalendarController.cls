@@ -12,7 +12,7 @@ public class FullCalendarController {
         system.debug('Monthly_Beat_Plan__c---------->'+MBPlist);
         MBPid=MBPlist[0].Id;
         system.debug('MBPid----'+MBPid);
-        List<Visit__c> getAllvisitRecordList = [Select Id,KPI_Target__r.Name,Account__c,Account__r.Name,Lead__c,Lead__r.Name,Start_Date_Time__c,Route__c,Route__r.Name,Visit_Status__c,Actual_visit_date__c,KPI_Target_Name__c From Visit__c Where Account__c!=NUll and MBPID__c =:MBPid];
+        List<Visit__c> getAllvisitRecordList = [Select Id,KPI_Target__r.Name,Account__c,Account__r.Name,Lead__c,Lead__r.Name,Start_Date_Time__c,Route__c,Route__r.Name,Visit_Status__c,Actual_visit_date__c,KPI_Target_Name__c From Visit__c Where (Account__c!=NUll or Lead__c !=Null) and MBPID__c =:MBPid];
         system.debug('getAllvisitRecordList-------'+getAllvisitRecordList);
         List<KPI_Target__c> getAllKpiTargetRecList  = [Select Id,Monthly_Beat_Plan__c,Roles_and_KPI__c from KPI_Target__c];
 

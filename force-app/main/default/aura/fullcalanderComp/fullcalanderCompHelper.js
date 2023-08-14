@@ -37,11 +37,12 @@
         debugger;
         var eventArr = [];
         for(var i = 0;i < events.length;i++){
+            var eventName = events[i].Account__r ? events[i].Account__r.Name : (events[i].Lead__r ? events[i].Lead__r.Name :events[i].KPI_Target_Name__c);
             eventArr.push({
-                'id':events[i].Id,
-                'start':events[i].Actual_visit_date__c,
-                'end':events[i].Actual_visit_date__c,	
-                'title':events[i].Account__r.Name+' >'+events[i].KPI_Target_Name__c,
+                'id': events[i].Id,
+                'start': events[i].Actual_visit_date__c,
+                'end': events[i].Actual_visit_date__c,
+                'title': eventName,
             });
         }
         return eventArr;
@@ -67,9 +68,6 @@
                 wrappersw=response.getReturnValue();
                 weeklist=wrappersw.MBPlist[0].Weekly_Beat_Plans__r;
                 visits=wrappersw.visitRecList;
-                for(var i = 0;i <weeklist.length;i++){
-                    
-                }
                 component.set("v.Weeklybp",weeklist);
                 var eventArr = self.tranformToFullCalendarFormat(component,visits);
                 self.loadDataToCalendar(component,eventArr);

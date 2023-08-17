@@ -1,0 +1,26 @@
+<aura:component controller="OrderStageController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:attribute name="statusObj" type="object" default="Order"/>
+    <aura:attribute name="statusField" type="String" default="Status"/>
+    <aura:attribute name="recordId" type="string" default="8010k000000heYFAAY"/>
+    
+    <div class="slds">
+        <div class="pathStatus"> 
+            <force:recordData aura:id="record"
+                              layoutType="FULL"
+                              recordId="{!v.recordId}"
+                              targetFields="{!v.statusField}"
+                              mode="EDIT" />
+            
+            <lightning:picklistPath aura:id="statusPath" recordId="{!v.recordId}"
+                                    variant="linear"
+                                    picklistFieldApiName="Status"
+                                    onselect="{!c.statusPicklistSelect}">
+            </lightning:picklistPath>            
+        </div>
+        
+        <br/>
+        <br/>
+    </div>
+</aura:component>

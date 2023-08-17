@@ -1,6 +1,7 @@
 <aura:component controller="TodayTaskAuraController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
     <aura:attribute name="atr1" type="string" />
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="accountId" type="String"/>
     
     <aura:attribute name="showCreateTask" type="boolean" default="false"/>
     <aura:attribute name="showCreateCallLogTask" type="boolean" default="false"/>
@@ -18,9 +19,18 @@
     <aura:attribute name="caseRec" type="sObject" default="{sObjectType: 'Case'}" />
     <aura:attribute name="visitRec" type="sObject" default="{sObjectType: 'Visit__c'}" />
     <aura:attribute name="accID" type="String" />
-    <aura:attribute name="recordID" type="String" />
+    <aura:attribute name="visitId" type="String" />
     <aura:attribute name="ShowCheckInButton" type="Boolean" default = "false"/>
     <aura:attribute name="ShowCheckOutButton" type="Boolean" default = "true"/>
+    <aura:attribute name="pastVisitList" type="List" />
+    <aura:attribute name="relOppList" type="List" />
+    <aura:attribute name="relInvoicesList" type="List" />
+    <aura:attribute name="relCaseList" type="List" />
+     <aura:attribute name="currentLatitude" type="String"/>
+    <aura:attribute name="currentLongitude" type="String"/>
+
+    <aura:registerEvent name="fieldVisitComponentEvent" type="c:fieldVisitComponentEvent"/>
+    
     <aura:html tag="style">
         .slds-modal__container { 
         width : 60% !important; max-width : 80% !important; 
@@ -28,89 +38,402 @@
     </aura:html>
     
     
-    <!--div style="margin-top:1%"-->
+    
         <lightning:Layout multipleRows="true">
-            
-            <!--lightning:LayoutItem padding="horizontal-small" size="12"-->
-                <lightning:LayoutItem size="12">
-                <div class="page-section page-header float-child">
-                    <lightning:Layout>
-                        <lightning:LayoutItem size="2">
-                            <div style="padding:3%; position:relative; top:-27%; display:inline-block;">
-                                <lightning:icon variant="inverse" iconName="utility:back" alternativeText="Utility image" title="Image" />
-                            </div>
-                            <div style="padding:3%; position:relative; top:-27%; display:inline-block;">
-                                <lightning:icon variant="inverse" iconName="standard:contact_list" alternativeText="Utility image" title="Image" />
-                            </div>
-                        </lightning:LayoutItem>
-                        <lightning:LayoutItem size="10">
-                            <div style="padding:0%; position:relative; top:-18%; display:inline-block;"><h1 style="color:white; font-size:170%;">{!v.visitRec.Account__r.Name}</h1></div>
-                        </lightning:LayoutItem>
-                    </lightning:Layout>
-                </div>
+            <!--div style="margin-top:1%"-->
+            <lightning:LayoutItem padding="horizontal-small" size="8" class="headerStartVisitPage">
+                    <div class="page-section page-header">
+                        <lightning:Layout>
+                            <lightning:LayoutItem size="2">
+                                <div style="padding:3%; position:relative; top:-27%; display:inline-block;">
+                                    <lightning:icon variant="inverse" iconName="utility:back" alternativeText="Utility image" title="Image" onclick="{!c.goBackOnePage}" style="cursor: pointer;"/>
+                                </div>
+                                <div style="padding:3%; position:relative; top:-27%; display:inline-block;">
+                                    <lightning:icon variant="inverse" iconName="standard:contact_list" alternativeText="Utility image" title="Image" />
+                                </div>
+                            </lightning:LayoutItem>
+                            <lightning:LayoutItem size="10">
+                                <div style="padding:0%; position:relative; top:-18%; display:inline-block;"><h1 style="color:white; font-size:170%;">{!v.visitRec.Account__r.Name}</h1></div>
+                            </lightning:LayoutItem>
+                        </lightning:Layout>
+                    </div>
             </lightning:LayoutItem>
             
-            <!--lightning:LayoutItem padding="horizontal-small" size="12"-->
+            <lightning:LayoutItem padding="horizontal-small" size="8">
                 <lightning:LayoutItem size="12">
-                <lightning:card>
-                    <lightning:Layout>
-                        <lightning:LayoutItem size="12">
-                            
-                            <lightning:Layout>
-                                <lightning:LayoutItem  size="3">
-                                    <div style=" padding-left: 12%; padding-bottom: 5%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Beat Id:</div>
-                                    <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Name}</div>
-                                </lightning:LayoutItem>
-                                <lightning:LayoutItem size="6">
-                                    <div style=" padding-left: 12%; padding-bottom: 5%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Website:</div>
-                                    <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Account__r.Website}</div>
-                                </lightning:LayoutItem>
-                                <lightning:LayoutItem size="3">
-                                    <div style=" padding-left: 12%; padding-bottom: 5%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Phone:</div>
-                                    <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Account__r.Phone}</div>
-                                </lightning:LayoutItem>
-                            </lightning:Layout>
-                        </lightning:LayoutItem>
-                    </lightning:Layout>
-                    
-                    <lightning:Layout>
-                        <lightning:LayoutItem size="12">
-                            <lightning:Layout>
-                                <lightning:LayoutItem  size="3">
-                                    <div style=" padding-left: 12%; padding-bottom: 1%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Email:</div>
-                                    <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Account__r.Email__c}</div>
-                                </lightning:LayoutItem>
-                                <lightning:LayoutItem size="6">
-                                    <div style=" padding-left: 12%; padding-bottom: 1%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block; position: relative;top: -63%;">Address:</div>
-                                    <div style=" padding-left: 1%; padding-bottom: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block; max-width: 76%">{!v.accountAddress}</div>
-                                </lightning:LayoutItem>
-                                <lightning:LayoutItem size="3">
-                                    <div style=" padding-left: 12%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Visit Time:</div>
-                                    <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Account__r.Visit_Time__c}</div>
-                                </lightning:LayoutItem>
-                            </lightning:Layout>
-                            
-                        </lightning:LayoutItem>
-                    </lightning:Layout>
-                </lightning:card>
+                    <lightning:card>
+                        <lightning:Layout>
+                            <lightning:LayoutItem size="12">
+                                
+                                <lightning:Layout>
+                                    <lightning:LayoutItem  size="3">
+                                        <div style=" padding-left: 12%; padding-bottom: 5%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Beat Id:</div>
+                                        <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Name}</div>
+                                    </lightning:LayoutItem>
+                                    <lightning:LayoutItem size="6">
+                                        <div style=" padding-left: 12%; padding-bottom: 5%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Website:</div>
+                                        <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Account__r.Website}</div>
+                                    </lightning:LayoutItem>
+                                    <lightning:LayoutItem size="3">
+                                        <div style=" padding-left: 12%; padding-bottom: 5%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Phone:</div>
+                                        <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Account__r.Phone}</div>
+                                    </lightning:LayoutItem>
+                                </lightning:Layout>
+                            </lightning:LayoutItem>
+                        </lightning:Layout>
+                        
+                        <lightning:Layout>
+                            <lightning:LayoutItem size="12">
+                                <lightning:Layout>
+                                    <lightning:LayoutItem  size="3">
+                                        <div style=" padding-left: 12%; padding-bottom: 1%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Email:</div>
+                                        <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Account__r.Email__c}</div>
+                                    </lightning:LayoutItem>
+                                    <lightning:LayoutItem size="6">
+                                        <div style=" padding-left: 12%; padding-bottom: 1%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block; position: relative;top: -46%;">Address:</div>
+                                        <div style=" padding-left: 1%; padding-bottom: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block; max-width: 76%">{!v.accountAddress}</div>
+                                    </lightning:LayoutItem>
+                                    <lightning:LayoutItem size="3">
+                                        <div style=" padding-left: 12%; justify-content: flex-start; align-items: center; gap: 4px;  color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">Visit Time:</div>
+                                        <div style=" padding-left: 1%; justify-content: flex-start; color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">{!v.visitRec.Account__r.Visit_Time__c}</div>
+                                    </lightning:LayoutItem>
+                                </lightning:Layout>
+                                
+                            </lightning:LayoutItem>
+                        </lightning:Layout>
+                    </lightning:card>
+                </lightning:LayoutItem>
             </lightning:LayoutItem>
             
-            <!--lightning:LayoutItem padding="around-small" size="12"-->
-                <lightning:LayoutItem size="12" class="buttonCard">
+             <lightning:LayoutItem  size="4">
+               <lightning:Layout>
+                            <lightning:LayoutItem size="12">
+                                    <c:mapcontainer recordId="{!v.accID}"  />
+                            </lightning:LayoutItem>
+                        </lightning:Layout>
+            </lightning:LayoutItem>
+            
+            <lightning:LayoutItem padding="around-small" size="8">
                 <lightning:card >
-                    <lightning:Layout>
-                        <lightning:LayoutItem padding="around-small" size="12">
-                            <lightning:button onclick="{!c.createCaseHanlde}" label="New Ticket" class="visitMainButtons"/>
-                            <lightning:button onclick="{!c.createOpportunityHandle}" label="New Opportunity" class="visitMainButtons"/>
-                            <lightning:button  onclick="{!c.createLogCallHanlde}" label="Log a call" class="visitMainButtons"/>
-                            <lightning:button onclick="{!c.createTaskHanlde}" label="Log an Activity" class="visitMainButtons"/>
-                            <lightning:button onclick="{!c.checkOutHandler}" label="Check-Out" disabled="{!v.ShowCheckOutButton}" class="visitMainButtons"/>
-                            <lightning:button onclick="{!c.checkInHandler}" label="Check-In" disabled="{!v.ShowCheckInButton}" class="visitMainButtons"/>
-                        </lightning:LayoutItem>
-                    </lightning:Layout>
-                    <lightning:Layout>
-                       
-                    </lightning:Layout>
+                    <lightning:LayoutItem size="12" class="buttonCard">
+                        <lightning:Layout>
+                            <lightning:LayoutItem padding="around-small" size="12">
+                                <lightning:button onclick="{!c.createCaseHanlde}" label="New Ticket" class="visitMainButtons"/>
+                                <lightning:button onclick="{!c.createOpportunityHandle}" label="New Opportunity" class="visitMainButtons"/>
+                                <lightning:button  onclick="{!c.createLogCallHanlde}" label="Log a call" class="visitMainButtons"/>
+                                <lightning:button onclick="{!c.createTaskHanlde}" label="Log an Activity" class="visitMainButtons"/>
+                                <lightning:button onclick="{!c.checkOutHandler}" label="Check-Out" disabled="{!v.ShowCheckOutButton}" class="visitMainButtons"/>
+                                <lightning:button onclick="{!c.checkInHandler}" label="Check-In" disabled="{!v.ShowCheckInButton}" class="visitMainButtons"/>
+                            </lightning:LayoutItem>
+                        </lightning:Layout>
+                        <lightning:Layout>  
+                        </lightning:Layout>
+                    </lightning:LayoutItem>
+                    
+                    <lightning:LayoutItem size="12" class="">
+                        <lightning:tabset>
+                            <lightning:tab label="Activity">
+                                One Content !
+                            </lightning:tab>
+                            <lightning:tab label="Emails" title="2nd tab extended title">
+                                Two Content !
+                            </lightning:tab>
+                            <lightning:tab label="Past Visits">
+                                <div class="slds-m-around--xx-small slds-scrollable">
+                                    <div class="container-fluid">
+                                        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                            <thead>
+                                                <tr class="slds-text-title_caps" >
+                                                    <th scope="col" title="sNo" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">S No.</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Type" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Visit Type</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Id" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Visit Id</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Date" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Visit Date</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Duration" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Visit Duration</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Time" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Visit Time</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Status" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Visit Status</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <aura:iteration items="{!v.pastVisitList}" var="pastVisitRec" indexVar="index">
+                                                    <tr>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <h2>{!index+1}</h2>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!pastVisitRec.KPI_Target_Name__c}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!pastVisitRec.Name}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!pastVisitRec.Actual_visit_date__c}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!pastVisitRec.Duration__c}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!pastVisitRec.Check_In_Time__c}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!pastVisitRec.Visit_Status__c}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </aura:iteration>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </lightning:tab>
+                            <lightning:tab label="Documents">
+                                <iframe src="{!'https://sales-production--mfgcloud--c.sandbox.vf.force.com/apex/docCategories?id=' + v.accID}" width="100%" height="600px" />
+
+                            </lightning:tab>
+                            <lightning:tab label="Opportunities">
+                                <div class="slds-m-around--xx-small slds-scrollable">
+                                    <div class="container-fluid">
+                                        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                            <thead>
+                                                <tr class="slds-text-title_caps" >
+                                                    <th scope="col" title="sNo" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">S No.</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Type" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Opportunity Name</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Id" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Stage</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Date" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Close Date</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Duration" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Source</div>
+                                                    </th>
+                                                    <!--th scope="col" title="Visit Time" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Visit Time</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Status" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Visit Status</div>
+                                                    </th-->
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <aura:iteration items="{!v.relOppList}" var="val" indexVar="index">
+                                                    <tr>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <h2>{!index+1}</h2>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.Name}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.StageName}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.CloseDate}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.LeadSource}
+                                                            </div>
+                                                        </td>
+                                                        <!--td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!pastVisitRec.Check_In_Time__c}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!pastVisitRec.Visit_Status__c}
+                                                            </div>
+                                                        </td-->
+                                                    </tr>
+                                                </aura:iteration>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </lightning:tab>
+                            
+                            <lightning:tab label="Invoices">
+                                <div class="slds-m-around--xx-small slds-scrollable">
+                                    <div class="container-fluid">
+                                        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                            <thead>
+                                                <tr class="slds-text-title_caps" >
+                                                    <th scope="col" title="sNo" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">S No.</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Type" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Invoice Number</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Id" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Amount</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Date" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Status</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Duration" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Initiated Amount</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Time" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Realized Amount</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Status" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Invoice Date</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <aura:iteration items="{!v.relInvoicesList}" var="val" indexVar="index">
+                                                    <tr>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <h2>{!index+1}</h2>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.Name}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.Amount__c}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.Status__c}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.Initiated_Amount__c}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.Realized_Amount__c}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.Invoice_Date__c}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </aura:iteration>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </lightning:tab>
+                            
+                            <lightning:tab label="Tickets">
+                                <div class="slds-m-around--xx-small slds-scrollable">
+                                    <div class="container-fluid">
+                                        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                            <thead>
+                                                <tr class="slds-text-title_caps" >
+                                                    <th scope="col" title="sNo" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">S No.</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Type" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Case Number</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Id" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Case Origin</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Date" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Status</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Duration" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Case Description</div>
+                                                    </th>
+                                                    <th scope="col" title="Visit Time" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Case Reason</div>
+                                                    </th>
+                                                    <!--th scope="col" title="Visit Status" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Invoice Date</div>
+                                                    </th-->
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <aura:iteration items="{!v.relCaseList}" var="val" indexVar="index">
+                                                    <tr>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <h2>{!index+1}</h2>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.CaseNumber}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.Origin}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.Status}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.Description}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.Reason}
+                                                            </div>
+                                                        </td>
+                                                        <!--td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!val.Invoice_Date__c}
+                                                            </div>
+                                                        </td-->
+                                                    </tr>
+                                                </aura:iteration>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </lightning:tab>
+                        </lightning:tabset>
+                    </lightning:LayoutItem>
                 </lightning:card>
             </lightning:LayoutItem>
             
@@ -145,7 +468,7 @@
                                 </div>
                             </div>
                             <footer class="slds-modal__footer">
-                               <div class="slds-align_absolute-center">
+                                <div class="slds-align_absolute-center">
                                     <lightning:button label="Cancel" variant="destructive" class="slds-m-top--medium"   onclick="{!c.closeActivityCreate}"/>
                                     <lightning:button label="Submit" variant="brand" class="slds-m-top--medium" onclick="{!c.saveTaskHandler}"/>
                                 </div>
@@ -175,7 +498,7 @@
                                 </div>
                             </div>
                             <footer class="slds-modal__footer">
-                              <div class="slds-align_absolute-center">
+                                <div class="slds-align_absolute-center">
                                     <lightning:button label="Cancel" variant="destructive" class="slds-m-top--medium"   onclick="{!c.closeCallLogCreate}"/>
                                     <lightning:button label="Submit" variant="brand" class="slds-m-top--medium" onclick="{!c.saveLogCall}"/>
                                 </div>
@@ -258,10 +581,6 @@
                     <div class="slds-backdrop slds-backdrop_open"></div>
                 </div>
             </aura:if>
-            
+            <!--/div-->
         </lightning:Layout>
-        
-        
-        
-    <!--/div-->
-</aura:component>
+        </aura:component>

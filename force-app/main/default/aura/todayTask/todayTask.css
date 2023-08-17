@@ -6,6 +6,10 @@
     padding: 1rem;
 }
 
+.THIS .bodyCard {
+    margin-left: 1%;
+}
+
 .THIS .page-header,
 .THIS .page-footer {
     height: 50px;
@@ -55,7 +59,7 @@
     cursor: pointer;
     border: 1px solid #ccc;
     background-color:white;
-    margin-left: 35px;
+    margin-left: 22px;
     border-radius: 50%;
     width: 35px;
     height: 35px;
@@ -83,6 +87,10 @@
     border-radius:7px;
 }
 
+.THIS .cardButton:disabled {
+    background-color: gray;
+}
+
 .THIS .mapDiv {
         margin-left: 7%;
 }
@@ -94,4 +102,28 @@
 
 .THIS .limitVertical::-webkit-scrollbar {
   display: none;
+}
+
+.THIS .prevButton {
+  float:right;
+    --sds-c-icon-color-foreground-default: #0070d2;
+    cursor:pointer;
+}
+
+.THIS .nextButton {
+  float:left;
+    --sds-c-icon-color-foreground-default: #0070d2;
+    cursor:pointer;
+}
+
+.THIS .nextButton:hover {
+ transform: scale(1.3);
+}
+
+.THIS .prevButton:hover {
+ transform: scale(1.3);
+}
+
+.THIS .date-item:hover {
+    transform: scale(1.3);
 }

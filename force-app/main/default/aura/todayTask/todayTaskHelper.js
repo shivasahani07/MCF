@@ -22,17 +22,20 @@
         action.setCallback(this, function(response){ // AccountAddressList
             if(response.getState()==='SUCCESS'){
                 var result = response.getReturnValue();
-                if(result != null && result != undefined && result != ''){
-                    if(result.visitList != null && result.visitList != undefined && result.visitList != ''){
+                if(result != null){
+                    if(result.visitList != undefined && result.visitList != null && result.visitList != ''){
                         component.set('v.taskList', result.visitList);
                         component.set('v.completedVisit', result.completedVisit); 
                         component.set('v.pendingVisit', result.pendingVisit);
+                        component.set("v.ShowEmptyPage",false);
                         if(result.dvpList != undefined && result.dvpList.length != 0){
                             component.set("v.ShowStartDay",true);
                             component.set("v.ShowEndDay",false);
+                            component.set('v.disableVisitButtons', false);
                         }else{
                             component.set("v.ShowStartDay",false);
                             component.set("v.ShowEndDay",true);
+                            component.set('v.disableVisitButtons', true);
                         }
                         
                         var objlocation = [];
@@ -59,12 +62,19 @@
                         this.MapinitMethod(component, event, helper);
                     }
                     else{
-                        this.showError(component, event, helper);
+                        //this.showError(component, event, helper);
+                        //alert('No visit created for day.');
                         return;
                     }
                 }
                 else{
-                    this.showError(component, event, helper);
+                    //alert('No Visits Scheduled for Today.');
+                    component.set('v.taskList', []);
+                    component.set('v.completedVisit', []); 
+                    component.set('v.pendingVisit', []);
+                    component.set("v.ShowStartDay",true);
+                    component.set("v.ShowEndDay",true);
+                    component.set("v.ShowEmptyPage",true);
                     return;
                 }
             }else{
@@ -124,6 +134,7 @@
                 if(data !=null){
                     component.set("v.ShowStartDay",true);
                     component.set("v.ShowEndDay",false);
+                    component.set('v.disableVisitButtons', false);
                 }
                 //this.showsuccessMessage(component, event);
             } else if (state === "ERROR") {
@@ -214,7 +225,41 @@
             mode: 'sticky'
         });
         toastEvent.fire();
-    }
+    },
+    
+    reloadPage: function(component, event, helper){
+        debugger;        
+        var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var counter = component.get("v.nextCounter");
+        //component.set("v.nextCounter",counter);
+        let curr = new Date();
+        var date = new Date();
+        date.setDate(date.getDate() + (7 * counter));
+        console.log(date);
+        let week = []
+        const dates = [];
+        curr = date;
+        for (let i = 1; i <= 7; i++) {
+            let first = curr.getDate() - curr.getDay() + i;
+            let weekDate = new Date(curr.setDate(first)).toISOString().slice(0, 10);
+            week.push(weekDate);
+            const newDate = new Date(weekDate);
+            //newDate.setDate(weekDate.getDate() + i);
+            var dateObj = {day:'', fullDate:'', month:''};
+            dateObj.fullDate = newDate.toISOString().slice(0, 10);
+            dateObj.day = newDate.toISOString().slice(8,10);
+            var MonthName=monthNames[newDate.getMonth()].slice(0,3);
+            dateObj.month = MonthName;
+            dates.push(dateObj);
+            
+        }
+        component.set("v.dates", dates);
+        
+        
+        
+    },
+    
+  
     
     
 })

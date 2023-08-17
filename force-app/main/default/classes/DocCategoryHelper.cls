@@ -26,10 +26,14 @@ global class DocCategoryHelper {
     }
     
     @RemoteAction
-    global static List<DocumentTreeWrapper> getDocuments(String dealId) {
-        if(String.isBlank(dealId))
+    global static List<DocumentTreeWrapper> getDocuments(Id dealId) {
+        String objectName = dealId.getSObjectType().getDescribe().getName();
+            System.debug(objectName);
+        if(String.isBlank(dealId)){
             return null;
-        Map<Id,DocumentTreeWrapper> uiWrapper = new Map<Id,DocumentTreeWrapper>();
+        }
+        if(objectName == 'Deal__c'){
+          Map<Id,DocumentTreeWrapper> uiWrapper = new Map<Id,DocumentTreeWrapper>();
         List<Document_Category__c> propAppList=  [Select id,Name from Document_Category__c where  deal__c=:dealId];
         String Obj = '';
         if(propAppList.size() > 0){
@@ -47,7 +51,30 @@ global class DocCategoryHelper {
                 uiWrapper.put(appDoc.Id, appDocWrapper);
             }
         }
-        return uiWrapper.values();
+        return uiWrapper.values();  
+        }
+        else if(objectName == 'Account'){
+		Map<Id,DocumentTreeWrapper> uiWrapper = new Map<Id,DocumentTreeWrapper>();
+        List<Document_Category__c> propAppList=  [Select id,Name from Document_Category__c where  Account__c=:dealId];
+        String Obj = '';
+        if(propAppList.size() > 0){
+            for(Document_Category__c appDoc : [SELECT Id, Name,(SELECT Id, Name FROM Documents_Attachments__r) FROM Document_Category__c WHERE Account__c =:dealId ORDER BY CreatedDate]) {
+                //Handle First level cat Here
+                DocumentTreeWrapper appDocWrapper;
+                
+                appDocWrapper = new DocumentTreeWrapper(appDoc.Id, appDoc.Name); 
+                if(!appDoc.Documents_Attachments__r.isEmpty()){
+                    for(Documents_Attachment__c appAttachment : appDoc.Documents_Attachments__r) {
+                        appDocWrapper.childNodes.add(new DocumentTreeWrapper(appAttachment.Id, appAttachment.Name));
+                    }
+                }
+                
+                uiWrapper.put(appDoc.Id, appDocWrapper);
+            }
+        }
+        return uiWrapper.values();             
+        }
+        return null;
     }
     
     public void viewPDF(){

@@ -1,7 +1,8 @@
 ({
     getVisitRecord : function(component, event, helper){
         debugger;
-        var visitRecId = 'a220k000000VO6WAAW';
+        var visitRecId = component.get('v.visitId');
+        //var visitRecId = 'a220k000000VO41AAG';
         var action = component.get('c.getSelectedVisitDetails');
         action.setParams({
             visitId :  visitRecId
@@ -22,6 +23,75 @@
         });
         $A.enqueueAction(action);
     },
+    
+    getPastVisitRecord : function(component, event, helper){
+        debugger;
+        var accountId = component.get('v.accID');
+        var action = component.get('c.getPastVisitDetails');
+        action.setParams({
+            accId : accountId 
+        });
+        action.setCallback(this, function(response){
+            if(response.getState()==='SUCCESS'){
+                var result = response.getReturnValue();
+                component.set('v.pastVisitList', result);
+            } 
+            
+        });
+        $A.enqueueAction(action);
+    },
+    
+        getAccRelatedOppList : function(component, event, helper){
+        debugger;
+            var accountId = component.get('v.accID');
+        var action = component.get('c.getRelOppList');
+            action.setParams({
+                accId : accountId
+            });
+        action.setCallback(this, function(response){
+            if(response.getState()==='SUCCESS'){
+                var result = response.getReturnValue();
+                component.set('v.relOppList', result);
+            } 
+            
+        });
+        $A.enqueueAction(action);
+    },
+    
+    getRelatedInvoiceList : function(component, event, helper){
+        debugger;
+            var accountId = component.get('v.accID');
+        var action = component.get('c.getRelInvoiceList');
+            action.setParams({
+                accId : accountId
+            });
+        action.setCallback(this, function(response){
+            if(response.getState()==='SUCCESS'){
+                var result = response.getReturnValue();
+                component.set('v.relInvoicesList', result);
+            } 
+            
+        });
+        $A.enqueueAction(action);
+    },
+    
+    getRelatedCaseList : function(component, event, helper){
+        debugger;
+            var accountId = component.get('v.accID');
+        var action = component.get('c.getRelCaseList');
+            action.setParams({
+                accId : accountId
+            });
+        action.setCallback(this, function(response){
+            if(response.getState()==='SUCCESS'){
+                var result = response.getReturnValue();
+                component.set('v.relCaseList', result);
+            } 
+            
+        });
+        $A.enqueueAction(action);
+    },
+    
     CheckInVisithelper : function(component,lat,long){
         debugger;
         var action = component.get("c.checkInVisitUpdate");
@@ -50,6 +120,15 @@
             }
         })
         $A.enqueueAction(action);
+    },
+    callNavigation:function(component,event,helper,accId){
+        debugger;
+        var navEvt = $A.get("e.force:navigateToSObject");
+        navEvt.setParams({
+            "recordId": accId,
+            "slideDevName": "related"
+        });
+        navEvt.fire();
     }
 
 });

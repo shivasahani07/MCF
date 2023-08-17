@@ -1,5 +1,5 @@
-.THIS.header{
-    background-color:red;
-    color:white;
-    height:50px;
+.THIS .header {
+    background-color:red !important;
+    color:white !important;
+    height:50px !important;
 }

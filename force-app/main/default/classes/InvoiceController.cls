@@ -1,8 +1,9 @@
 public class InvoiceController {
 	@AuraEnabled
-    public static List<Invoices__c> getInvoiceList(){
+    public static List<Invoices__c> getInvoiceList(Integer pageSize, Integer pageNumber){
+        Integer offset = (pageNumber - 1) * pageSize;
         List<Invoices__c> invList = new List<Invoices__c>();
-        invList = [Select Id,Name,Invoice_Date__c,Due_Date__c,Status__c FROM Invoices__c];
+        invList = [Select Id,Name,Invoice_Date__c,Due_Date__c,Status__c FROM Invoices__c LIMIT :pageSize OFFSET :offset];
         return invList;
     }
 }

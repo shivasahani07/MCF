@@ -4,4 +4,8 @@ trigger TriggerOnAccount on Account (after insert) {
     if(trigger.isInsert && Trigger.isAfter){
         accHandler.afterInsert(Trigger.newMap);
     }
+    
+        if(trigger.isInsert && Trigger.isBefore){
+        accHandler.CreateDocumentCategories(Trigger.new);
+    }
 }

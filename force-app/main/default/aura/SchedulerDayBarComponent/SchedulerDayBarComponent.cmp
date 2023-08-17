@@ -12,10 +12,10 @@
     <div class="slds-m-left_medium slds-m-right_medium " >
         <h2 style="color: #0158A5; font-family: revert; font-size: 150%; font-weight: 550; padding-top:1%; margin-bottom:0.4%">Scheduler Insights</h2>
         <div class="slds-grid" style="margin-left:14.5%;" >
-            <aura:if isTrue="{!v.disablePrev}">
+           
                 <lightning:buttonIcon  iconName="utility:left"  variant="border-filled" size="large" aura:id="prevBtn" alternativeText="left"
                                       title="Previous" onclick="{!c.handlePrevClicked}"/>
-            </aura:if>
+            
             <!-- Date Bar -->
             <div>
                 <aura:iteration items="{!v.MonthListToShow}" var="dateObj">

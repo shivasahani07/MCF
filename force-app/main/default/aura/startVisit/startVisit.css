@@ -24,3 +24,8 @@
 .THIS .visitMainButtons:disabled {
     background-color: gray;
 }
+
+.THIS .headerStartVisitPage {
+        margin-top: 1%;
+    
+}

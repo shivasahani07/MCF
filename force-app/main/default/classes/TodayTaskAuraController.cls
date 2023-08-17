@@ -171,14 +171,14 @@ public class TodayTaskAuraController {
 
     //==========================================================================================================================================================================================================
     @AuraEnabled
-    public static void saveLogCall(Task taskRec){
+    public static void LogCall(Task taskRec){
         try{
             if(taskRec !=null){
                 System.debug('taskRec === >'+taskRec);
                 taskRec.OwnerId = userInfo.getUserId();
-                DateTime dt = System.Now();
+                /*DateTime dt = System.Now();
                 Date myDate = date.newinstance(dT.year(), dT.month(), dT.day());
-                taskRec.ActivityDate = myDate;
+                taskRec.ActivityDate = myDate;*/
                 insert taskRec;
             }
         }catch(Exception e){
@@ -202,9 +202,11 @@ public class TodayTaskAuraController {
     //==========================================================================================================================================================================================================
     @AuraEnabled
     public static void saveCase(Case caseRec){
+        String userId = userInfo.getUserId();
         try{
             if(caseRec !=null){
                 System.debug('caseRec === >'+caseRec);
+                caseRec.OwnerId = userId;
                 insert caseRec;
             }
         }catch(Exception e){
@@ -240,6 +242,86 @@ public class TodayTaskAuraController {
         Visit__c visRec =[SELECT Id,Name,Actual_visit_date__c,CheckIn__Latitude__s,CheckIn__Longitude__s,Visit_Status__c FROM Visit__c WHERE CheckIn__Latitude__s !=null AND CheckIn__Longitude__s !=null LIMIT 1];
         try{
             return null;
+        }catch(Exception e){
+            System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
+        }
+        return null;
+    }
+    
+    
+    //==========================================================================================================================================================================================================
+    // Method for getting Past Visit Records
+     @AuraEnabled
+    public static List<Visit__c> getPastVisitDetails(String accId){
+        String userId = UserInfo.getUserId();
+        List<Visit__c> pastVisitList = new List<Visit__c>();
+        try{
+            if(String.isNotBlank(userId)){
+                pastVisitList = [SELECT Id, Name, Status__c, Account__c, Duration__c, Account__r.Name, Account__r.Website, Account__r.Email__c, Account__r.Phone,  
+                                 Visit_Time__c, Planned_visit_date__c, Weekly_Beat_Plan__c, KPI_Target__c, KPI_Target__r.KPI_Target_Name__c,Account__r.BillingStreet, 
+                                 Account__r.BillingCity, Account__r.BillingState,Account__r.BillingPostalCode,Account__r.BillingCountry, Actual_visit_date__c,
+                                 KPI_Target_Name__c FROM Visit__c WHERE Assigned_User__c=:userId AND Actual_visit_date__c < today AND Account__c =: accId];
+                if(pastVisitList !=null){
+                    System.debug('pastVisitList === >'+pastVisitList);
+                    return pastVisitList;
+                }
+            }
+        }catch(Exception e){
+            System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
+        }
+        return null;
+    }
+    
+        //==========================================================================================================================================================================================================
+    // Method for getting Related Opportunities List
+    
+    @AuraEnabled
+    public static List<Opportunity> getRelOppList(String accId){
+        List<Opportunity> oppList = new List<Opportunity>();
+        try{
+            if(String.isNotBlank(accId)){
+                oppList = [SELECT Id, Name, StageName, CloseDate, LeadSource FROM Opportunity WHERE AccountId=:accId LIMIT 10];
+                if(oppList !=null){
+                    System.debug('oppList === >'+oppList);
+                    return oppList;
+                }
+            }
+        }catch(Exception e){
+            System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
+        }
+        return null;
+    }
+    
+    @AuraEnabled
+    public static List<Invoices__c> getRelInvoiceList(String accId){
+        List<Invoices__c> invList = new List<Invoices__c>();
+        String userId = userInfo.getUserId();
+        try{
+            if(String.isNotBlank(accId)){
+                invList = [SELECT Id, Name, Amount__c, Status__c, Initiated_Amount__c, Realized_Amount__c, Invoice_Date__c, Account__c FROM Invoices__c WHERE Account__c=:accId AND OwnerId=:userId LIMIT 10];
+                if(invList !=null){
+                    System.debug('invList === >'+invList);
+                    return invList;
+                }
+            }
+        }catch(Exception e){
+            System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
+        }
+        return null;
+    }
+    
+        @AuraEnabled
+    public static List<Case> getRelCaseList(String accId){
+        List<Case> caseList = new List<Case>();
+        String userId = userInfo.getUserId();
+        try{
+            if(String.isNotBlank(accId)){
+                caseList = [SELECT Id, CaseNumber, Origin, Case_Status__c, Status, Description, Reason, AccountId FROM Case WHERE AccountId=:accId AND OwnerId=:userId LIMIT 10];
+                if(caseList !=null){
+                    System.debug('caseList === >'+caseList);
+                    return caseList;
+                }
+            }
         }catch(Exception e){
             System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
         }

@@ -1,9 +1,16 @@
 ({
     init: function(component, event, helper) {
         debugger;
-        // Define the list of months
-       
+        let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        let date=new Date();
+        let year=date.getFullYear();
+        let month=date.getMonth();
+        let MonthName=monthNames[date.getMonth()];
         var action = component.get('c.getMonthBeatPlan');
+        action.setParams({ 
+            month:MonthName,
+            year:year
+        });
          action.setCallback(this, function(response) {
              if(response.getState() === "SUCCESS"){
                  var data = response.getReturnValue();
@@ -16,6 +23,6 @@
         });
            $A.enqueueAction(action);
 
-    },
-
+    }    
+  
 })

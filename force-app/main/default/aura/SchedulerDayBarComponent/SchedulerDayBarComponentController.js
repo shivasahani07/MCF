@@ -37,7 +37,31 @@
     
     handlePrevClicked:function(component, event, helper) {
        debugger;
+       let FirstIndexMonth;
+        var MonthListOnUI=component.get("v.MonthListToShow");
+        for(let i=0;i<MonthListOnUI.length;i++){
+            if(i==0){
+                FirstIndexMonth=MonthListOnUI[i].month;
+                break;  
+            }    
+        }
+        let MonthYearArray=FirstIndexMonth.split(' ');
+        
+        let inputMonth; 
+        let inputYear;
         let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        let monthNamesAndValues = [{month:"January",value:1},{month:"February",value:2},{month:"March",value:3}, {month:"April",value:4}, {month:"May",value:5}, {month:"June",value:6},{month:"July",value:7},{month:"August",value:8},{month:"September",value:9},{month:"October",value:10},{month: "November",value:11},{month:"December",value:12}];
+        if(MonthYearArray[0]!=null && MonthYearArray[1]!=null){
+            for(let i=0;i<monthNamesAndValues.length;i++){
+                if(monthNamesAndValues[i].month==MonthYearArray[0]){
+                    inputMonth=monthNamesAndValues[i].value;
+                    inputYear=MonthYearArray[1];
+                }
+            }
+        }
+        if(inputMonth!=undefined && inputYear!=undefined)
+            helper.getPreviousMonthAndYear(component,event,helper,inputMonth,inputYear); 
+        /*let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         let date=new Date();
         let year=date.getFullYear();
         let month=date.getMonth();
@@ -68,11 +92,35 @@
         let FirstMonth='January'+' '+year;
         if(FirstIndexMonth==MonthList[0]){
             component.set("v.disablePrev",false);
-        }
+        }*/
     },
      handleNextClicked:function(component, event, helper) {
        debugger;
-        let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+       let FirstIndexMonth;
+         var MonthListOnUI=component.get("v.MonthListToShow");
+         for(let i=0;i<MonthListOnUI.length;i++){
+             if(i==5){
+                 FirstIndexMonth=MonthListOnUI[i].month;
+                 break;
+             }     
+         }
+         let MonthYearArray=FirstIndexMonth.split(' ');
+         
+         let inputMonth; 
+         let inputYear;
+         let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+         let monthNamesAndValues = [{month:"January",value:1},{month:"February",value:2},{month:"March",value:3}, {month:"April",value:4}, {month:"May",value:5}, {month:"June",value:6},{month:"July",value:7},{month:"August",value:8},{month:"September",value:9},{month:"October",value:10},{month: "November",value:11},{month:"December",value:12}];
+         if(MonthYearArray[0]!=null && MonthYearArray[1]!=null){
+             for(let i=0;i<monthNamesAndValues.length;i++){
+                 if(monthNamesAndValues[i].month==MonthYearArray[0]){
+                     inputMonth=monthNamesAndValues[i].value;
+                     inputYear=MonthYearArray[1];
+                 }
+             }
+         }
+         if(inputMonth!=undefined && inputYear!=undefined)
+             helper.getNextMonthAndYear(component,event,helper,inputMonth,inputYear);  
+        /*let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         let date=new Date();
         let year=date.getFullYear();
         let month=date.getMonth();
@@ -100,7 +148,7 @@
             }
             TempMonthlist.push(selectedmonthstoshow);
         }
-        component.set("v.MonthListToShow",TempMonthlist); 
+        component.set("v.MonthListToShow",TempMonthlist);*/ 
     },
     handleClick:function(component, event, helper) {
         debugger;

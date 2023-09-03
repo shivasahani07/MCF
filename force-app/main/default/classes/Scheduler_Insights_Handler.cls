@@ -1,5 +1,5 @@
 public class Scheduler_Insights_Handler {
-
+    
     @AuraEnabled
     public static SchedulerInsightsWrapper getAllDateOfSchdeularSight(){
         try{
@@ -14,7 +14,7 @@ public class Scheduler_Insights_Handler {
             List<Invoices__c> geAllinvoceRecordList = [Select Id,Name,Payment_Option__c,Payment_Mode__c,Amount__c,Invoice_Date__c,Account__c,Opportunity__c From Invoices__c Where Account__c!=null];
             List<Case> getAllcaseRecordList = [Select Id,CaseNumber,AccountId,Account.Name,Status,CreatedDate,Subject,Description,Origin From Case Where  AccountId !=null Limit 20];
             List<Feedback__c> getAllFeedbackRecordList = [Select Id,Name,Account__c,Description__c,Feedback_Rating__c From Feedback__c Where Account__c!=null];
-            List<Day_Visit_Plan__c> getAllDayVisitPlanRecList = [Select Id,Start_Date__c,End_Date__c,Total_Distance__c From Day_Visit_Plan__c];
+            List<Day_Visit_Plan__c> getAllDayVisitPlanRecList = [Select Id,Start_Date__c,End_Date__c,Total_Distance__c From Day_Visit_Plan__c where Service_Executive__c =: userInfo.getUserId()];
             List<KPI_Target__c> getAllKpiTargetRecList  = [Select Id,Monthly_Beat_Plan__c,Roles_and_KPI__c from KPI_Target__c];
             SchedulerInsightsWrapper sw= new  SchedulerInsightsWrapper();
             if(getAllvisitRecordList.size()>0){
@@ -89,4 +89,20 @@ public class Scheduler_Insights_Handler {
         public List<Day_Visit_Plan__c> dayVisitPlanList {get;set;}
     }
     
+    // September 2023
+    public static List<Day_Visit_Plan__c> getAllDateOfTravelDayVisitPlan(String month,string year){
+        List<Day_Visit_Plan__c> getAllDayVisitPlanRecList = [Select Id,Start_Date__c,End_Date__c,Total_Distance__c From Day_Visit_Plan__c where Service_Executive__c =: userInfo.getUserId() AND Month_year__c=:year AND Month_Name__c=:month];
+        
+        return getAllDayVisitPlanRecList;
+    }
+    
+    Public static void updateMonthname(List<Day_Visit_Plan__c> updateDvp){
+        for(Day_Visit_Plan__c dvp:updateDvp){
+            Datetime now = dvp.Start_Date__c;
+            String monthName = now.format('MMMM');
+            String year = String.valueOf(now.year());
+            dvp.Month_Name__c=monthName;
+            dvp.Month_year__c=year;
+        }
+    }
 }

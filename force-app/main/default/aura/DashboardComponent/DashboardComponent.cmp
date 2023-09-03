@@ -5,7 +5,7 @@
     <aura:attribute name="showtabthree" type="boolean" default="false"/>  
     <aura:attribute name="showtabfour" type="boolean" default="false"/>
     <aura:attribute name="showtabfive" type="boolean" default="false"/> 
-    <div class="">
+    <div Style="">
         <!--div class="slds-grid slds-wrap">
         </div -->
         <lightning:layout class="container" multipleRows="true" >
@@ -44,7 +44,7 @@
                                <c:todayTask/>
                             </aura:if>
                             <aura:if isTrue="{!v.showtabthree}">
-                                <c:BeatPlnnerComp/>
+                                <c:NewBeatPlanner/>
                             </aura:if>
                             <aura:if isTrue="{!v.showtabfour}">
                                 <c:ShowSchedulerInsightsComponent/>

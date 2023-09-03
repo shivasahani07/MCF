@@ -1,23 +1,37 @@
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global"  controller="FullCalendarController"> 
-    <!--aura:handler  name="init" value="{!this}" action="{!c.doinit}"/-->
+    
     <aura:attribute name="wrapper" type="object" />
-    <aura:attribute name="Monthly_Beat_Plan__c" type="object[]" />
+    <aura:attribute name="Monthly_Beat_Plan__c" type="object" />
     <aura:attribute name="Visits" type="object[]" />
     <aura:attribute name="Weeklybp" type="Weekly_Beat_Plan__c[]" />
     <aura:attribute name="month" type="String" />
-    <aura:attribute name="year" type="String" />
+    <aura:attribute name="year" type="integer"/>
+    
+    
+    <ltng:require styles="{!$Resource.Calendar     + '/FullCalendarJS/fullcalendar.min.css'}"
+                  scripts="{!join(',',
+                           $Resource.Calendar  + '/FullCalendarJS/jquery.min.js',
+                           $Resource.Calendar  + '/FullCalendarJS/moment.min.js',
+                           $Resource.Calendar  + '/FullCalendarJS/theme.js',
+                           $Resource.Calendar  + '/FullCalendarJS/jquery-ui.min.js',
+                           $Resource.Calendar  + '/FullCalendarJS/fullcalendar.min.js',
+                           $Resource.Calendar  + '/FullCalendarJS/jquery.ui.touch-punch.min.js'
+                           )}"
+                  afterScriptsLoaded="{!c.afterScriptsLoaded}" />
     
     
     
-    <ltng:require styles="{!$Resource.FullCalenderJs     + '/fullcalendar/fullcalendar/fullcalendar.css'}"
+    <!---<ltng:require styles="{!$Resource.FullCalenderJs     + '/fullcalendar/fullcalendar/fullcalendar.css'}"
                   scripts="{!join(',',
                            $Resource.FullCalenderJs  + '/fullcalendar/fullcalendar/lib/jquery.min.js',
                            $Resource.FullCalenderJs  + '/fullcalendar/fullcalendar/lib/moment.min.js',
                            $Resource.FullCalenderJs  + '/fullcalendar/fullcalendar/fullcalendar.js'
                            )}"
-                  afterScriptsLoaded="{!c.afterScriptsLoaded}" />
+                  afterScriptsLoaded="{!c.afterScriptsLoaded}" /-->
+    
+    
     <ltng:require styles="/resource/fullcalendar/fullcalendar/fullcalendar.css"/>
-    <aura:attribute name="events" type="Object[]" />
+    <!--aura:attribute name="events" type="Object[]" /-->
     <aura:html tag="style">
         .mainContainer{
         background-color: #ffffff;
@@ -72,22 +86,35 @@
         border-radius: 6px;
         }
         
+        
+        
+        .external-events .fc-event {
+        margin: 10px 0;
+        cursor: pointer !important;
+        padding: 5px;
+        background-color: #5a6ccc !important;
+        border: #5a6ccc !important;
+        }        
+        
     </aura:html> 
-    <div class="mainContainer" style="height:90vh;">
+    <div class="mainContainer" style="height:90vh;">               
         <div class="boxContainer" aura:id="external-events">
-            <aura:iteration items="{!v.Weeklybp}" var="item">
-                <div class="box draggable-event" id="draggableEvent" draggable="true">
-                    <h3>{!item.Week_Number__c}</h3>
-                    <p style="text:bold">( <lightning:formattedDateTime value="{!item.Start_Day_of_Week__c}" day="2-digit" month="short"/> To <lightning:formattedDateTime value="{!item.End_Day_of_Week__c}" day="2-digit" month="short"/> )</p>
-                    <div class="box-buttons">
-                        <button class="slds-button slds-button_neutral button-light-blue">4 Site Visit</button>
-                        <button class="slds-button slds-button_brand button-light-green">2 CP Visit</button>
-                    </div>
-                </div>
-            </aura:iteration>
+            <div class="event-container" style="max-height: 650px;padding-top:2%;">
+                    <aura:iteration items="{!v.Weeklybp}" var="item">
+                        {!item.Start_Day_of_Week__c}
+                        <div class="box draggable-event" id="listCalender" draggable="true">
+                            <h3>{!item.Week_Number__c}</h3>
+                            <p style="text:bold">( <lightning:formattedDateTime value="{!item.Start_Day_of_Week__c}" day="2-digit" month="short"/> To <lightning:formattedDateTime value="{!item.End_Day_of_Week__c}" day="2-digit" month="short"/> )</p>
+                            <div class="box-buttons">
+                                <button class="slds-button slds-button_neutral button-light-blue">4 Site Visit</button>
+                                <button class="slds-button slds-button_brand button-light-green">2 CP Visit</button>
+                            </div>
+                        </div>
+                    </aura:iteration>
+            </div>
         </div>
         <div class="callyContainer">
-            <div aura:id="calendar"></div> 
+            <div  id="calendar"></div> 
         </div>
     </div>
 </aura:component>

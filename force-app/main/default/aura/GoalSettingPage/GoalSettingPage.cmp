@@ -1,27 +1,31 @@
-<aura:component controller="OrderController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
-	
+<aura:component controller="DealerProductController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
     <aura:attribute name="ordList" type="Order[]"/>
     <aura:attribute name="pageNumber" type="Integer" default="1"/>
     <aura:attribute name="pageSize" type="Integer" default="10"/>
     <aura:attribute name="isLastPage" type="Boolean" default="false"/>
     <aura:attribute name="dataSize" type="Integer" default="0"/>
+    <aura:attribute name="accIdForChild" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
     
     <lightning:layout >
         <lightning:layoutItem size="12">
-            <div class="slds-m-around--xxx-large">
+            <div class="slds-m-around--xx-large">
                 
                 <lightning:card>
                     <aura:set attribute="title">
                         <div class="slds-page-header__name">
                             <div class="slds-page-header__name-title">
                                 <h1>
-                                    <span class="slds-page-header__title" style="font-size: 175%;"><Strong>Orders</Strong></span>
+                                    <span class="slds-page-header__title" style="font-size: 175%;"><Strong>Goal Setting</Strong></span>
                                 </h1>
                             </div>
                         </div>
                     </aura:set>
+                    
+                    
                     <aura:set attribute="footer">
                         <div class="slds-align_absolute-center"> 
                             <div class="slds-p-right_xx-small">
@@ -48,32 +52,46 @@
                         
                     </aura:set>
                     
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_2-of-12 slds-text-heading_medium slds-p-top_large slds-m-left_xx-large">
+                            <span>Yearly Target:</span>
+                        </div>
+                        <div class="slds-col slds-size_4-of-12 slds-p-bottom_xx-large slds-m-right_xx-large">
+                            <span><lightning:input name="input2" value="initial value"/></span>
+                        </div>
+                        
+                        <div class="slds-col slds-size_4-of-12 slds-p-top_large">
+                            <span><lightning:progressBar value="50" size="large" /></span>
+                        </div>
+                    </div>
+                    
+                    
                     <table style="border-collapse: separate;border-spacing:0 10px;">
                         <thead>
                             <tr>
-                                <th scope="col" style="border-top-left-radius:8px;border-bottom-left-radius:8px;background-color:green;Color:white;width:150px;text-align:center;padding:5px;">
+                                <th scope="col" style="border-top-left-radius:8px;border-bottom-left-radius:8px;background-color:#5FADB0;Color:white;width:150px;text-align:center;padding:5px;">
                                     <div  title="Sr.No">
                                         Sr.No
                                     </div>
                                 </th>
-                                <th  scope="col" style="background-color:green;Color:white;width:150px;text-align:center;padding:5px;">
+                                <th  scope="col" style="background-color:#5FADB0;Color:white;width:150px;text-align:center;padding:5px;">
                                     <div  title="Product Name">
-                                        Order Id
+                                        Product
                                     </div>
                                 </th>
-                                <th  scope="col" style="background-color:green;Color:white;width:150px;text-align:center;padding:5px;">
+                                <th  scope="col" style="background-color:#5FADB0;Color:white;width:150px;text-align:center;padding:5px;">
                                     <div  title="Product Code">
-                                        Order Stage
+                                        List Price
                                     </div>
                                 </th>
-                                <th  scope="col" style="background-color:green;Color:white;width:150px;text-align:center;padding:5px;">
+                                <th  scope="col" style="background-color:#5FADB0;Color:white;width:150px;text-align:center;padding:5px;">
                                     <div  title="Quantity">
-                                        Order Placed On
+                                        Quantity
                                     </div>
                                 </th>
-                                <th  scope="col" style="border-top-right-radius:8px;border-bottom-right-radius:8px;background-color:green;Color:white;width:150px;text-align:center;padding:5px;">
+                                <th  scope="col" style="border-top-right-radius:8px;border-bottom-right-radius:8px;background-color:#5FADB0;Color:white;width:150px;text-align:center;padding:5px;">
                                     <div  title="Quantity">
-                                        Order Delivery Date
+                                        Total Target
                                     </div>
                                 </th>
                                 

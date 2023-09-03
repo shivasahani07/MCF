@@ -12,7 +12,7 @@ public class TodayTaskAuraController {
                 Integer month = Integer.valueOf(dateArray[1]);
                 Integer day = Integer.valueOf(dateArray[2]);
                 date VisitFormatedDate = date.newInstance(year, month, day);
-                visitListToShow = [SELECT Id, Name, Status__c, Account__c, Duration__c, Account__r.Name, Account__r.Website, Account__r.Email__c, Account__r.Phone,  Visit_Time__c, Planned_visit_date__c, Weekly_Beat_Plan__c, KPI_Target__c, KPI_Target__r.KPI_Target_Name__c,Account__r.BillingStreet, Account__r.BillingCity, Account__r.BillingState,Account__r.BillingPostalCode,Account__r.BillingCountry FROM Visit__c WHERE Planned_visit_date__c=:VisitFormatedDate AND Account__r.BillingStreet !=null AND Account__r.BillingCity !=null LIMIT 5];
+                visitListToShow = [SELECT Id, Name, Status__c, Account__c, Duration__c, Account__r.Name, Account__r.Website, Account__r.Email__c, Account__r.Phone,  Visit_Time__c, Planned_visit_date__c, Weekly_Beat_Plan__c, KPI_Target__c, KPI_Target__r.KPI_Target_Name__c,Account__r.BillingStreet, Account__r.BillingCity, Account__r.BillingState,Account__r.BillingPostalCode,Account__r.BillingCountry,Geo_Location__latitude__s, Geo_Location__longitude__s FROM Visit__c WHERE Planned_visit_date__c=:VisitFormatedDate AND Account__r.BillingStreet !=null AND Account__r.BillingCity !=null LIMIT 5];
                 if(visitListToShow.size()>0){
                     integer compVisitCount=0;
                     integer pendingVisitCount =0;
@@ -259,7 +259,7 @@ public class TodayTaskAuraController {
             if(String.isNotBlank(userId)){
                 pastVisitList = [SELECT Id, Name, Status__c, Account__c, Duration__c, Account__r.Name, Account__r.Website, Account__r.Email__c, Account__r.Phone,  
                                  Visit_Time__c, Planned_visit_date__c, Weekly_Beat_Plan__c, KPI_Target__c, KPI_Target__r.KPI_Target_Name__c,Account__r.BillingStreet, 
-                                 Account__r.BillingCity, Account__r.BillingState,Account__r.BillingPostalCode,Account__r.BillingCountry, Actual_visit_date__c,
+                                 Account__r.BillingCity, Account__r.BillingState,Account__r.BillingPostalCode, Check_In_Time__c, Visit_Status__c, Account__r.BillingCountry, Actual_visit_date__c,
                                  KPI_Target_Name__c FROM Visit__c WHERE Assigned_User__c=:userId AND Actual_visit_date__c < today AND Account__c =: accId];
                 if(pastVisitList !=null){
                     System.debug('pastVisitList === >'+pastVisitList);

@@ -13,7 +13,7 @@ public without sharing class OpportunityTriggerHelper {
         List<Task> taskListToInsert = new List<task>();
         List<WorkOrder> workOrderList = new List<WorkOrder>();
         List<Purchase_Order__c> poRecList = new List<Purchase_Order__c>();
-
+        
         for(Opportunity opp : oppList){
             if((opp.Finance_Team__c != null && opp.Finance_Team__c != oldMapOpportunity.get(opp.Id).Finance_Team__c) || (opp.Legal_Team__c != null && opp.Legal_Team__c != oldMapOpportunity.get(opp.Id).Legal_Team__c)){
                 opp.StageName = 'Under Finance  & Legal';
@@ -40,7 +40,7 @@ public without sharing class OpportunityTriggerHelper {
                 newQuoteList.add(newQuote);
             }
             if(!newQuoteList.isEmpty()){
-               // insert newQuoteList;
+                // insert newQuoteList;
             }
         }
         if(!oppIdbyOppRecForClosedWonMap.isEmpty()){
@@ -511,4 +511,32 @@ insert conDocLink;*/
             }
         } 
     }
+    
+    Public static void createFolderforOpp(list<Opportunity> newOppList){
+        
+        //String folderName='Request for Proposal (RFP), Tender Documents,Technical Specifications,Environmental Impact Assessment (EIA) Reports,Site Information, Land Ownership Documentation,Government Approvals & Permits,Project Timeline and Milestones,Quality Certifications,Compliance Documents,Maintenance and Service Plans,Project Implementation Plan';
+        String folderName = 'Request for Proposal (RFP), Tender Documents, Technical Specifications, Environmental Impact Assessment (EIA) Reports, Site Information, Land Ownership Documentation, Government Approvals & Permits, Project Timeline and Milestones, Quality Certifications, Compliance Documents, Maintenance and Service Plans, Project Implementation Plan';
+        // Split the string into an array using commas as the delimiter
+        List<String> folderNamesList = folderName.split(', ');
+        List<Document_Category__c>  listTobeInserted = new  List<Document_Category__c> ();
+        
+        for(Opportunity createOppRec : newOppList){
+            for (String folder : folderNamesList) {
+                Document_Category__c  createfolder = new Document_Category__c();
+                createfolder.Name=folder;
+                system.debug(folder);
+                createfolder.Opportunity__c=createOppRec.Id;
+                listTobeInserted.add(createfolder);
+            }
+            
+        }
+        
+         insert listTobeInserted;
+           
+        
+        
+    }
+    
+    
+    
 }

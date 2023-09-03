@@ -1,6 +1,7 @@
 ({
 	doInit : function(component, event, helper) {
         debugger;
+        var accId = component.get("v.accIdForChild");
 		helper.getOrders(component, event);
 	},
     
@@ -18,7 +19,20 @@
         helper.getOrders(component, helper);
     },
     
-    accountselected : function(component, event, helper) {
+    newOrder : function(component,event,helper){
         debugger;
+         var modalFade1 = component.find('eventPopId');    
+        component.find("eventPopId").submitDR(modalFade1);
+    },
+    
+    orderDetail : function(component, event, helper) {
+        debugger;
+        var navigateEvent = $A.get("e.force:navigateToComponent");
+        navigateEvent.setParams({
+            componentDef: "c:OrderDetailsCmp"
+            //You can pass attribute value from Component1 to Component2
+            //componentAttributes :{ }
+        });
+        navigateEvent.fire();  
     }
 })

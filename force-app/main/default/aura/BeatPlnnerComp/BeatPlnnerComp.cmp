@@ -2,7 +2,7 @@
     
     <!--aura:handler  name="init" value="{!this}" action="{!c.doinit}"/-->
     <aura:attribute name="ShowToCreateMonthlyBeatPlan" type="Boolean" default="false"/>
-    <aura:handler name="sampleCmpEvent" event="c:SampleComponentEvent" action="{!c.parentComponentEvent}"/>
+    <!--aura:handler name="sampleCmpEvent" event="c:SampleComponentEvent" action="{!c.parentComponentEvent}"/-->
     <aura:attribute name="Weeklybp" type="Monthly_Beat_Plan__c[]" />
     <aura:attribute name="selectedMonth" type="String" />
     <aura:attribute name="selectedYear" type="String" />
@@ -10,6 +10,12 @@
     <aura:attribute name="month" type="String" />
     <aura:attribute name="mbpName" type="String" />
     <aura:attribute name="mbpStatus" type="String" />
+    <aura:attribute name="ShowdetailsMonthlyBeatPlan" type="Boolean" default="true"/>
+    <aura:attribute name="recordId" type="string"/>
+    <aura:attribute name="showApprovedCal" type="Boolean" default="false"/>
+    <aura:attribute name="showUnapprovedCal" type="Boolean" default="false"/>
+    
+    
     
     <aura:html tag="style">
         .header {
@@ -131,14 +137,15 @@
     <div style="background-color:#ffffff;height:98vh;">
         <h2 style="color: #0158A5; font-family:revert;font-size:150%;font-weight:550;margin-left:8%;">Beat Planner</h2>
         <div class="slds-align_absolute-center">
-            <c:MonthlyContainer></c:MonthlyContainer>
+            <!--c:MonthlyContainer></c:MonthlyContainer-->
         </div>
         <aura:if isTrue="{!v.ShowToCreateMonthlyBeatPlan}">
             <div style="margin-top:1%;">
                 <c:showToCreateMonthlyBeatPlan selectedMonthNumber="{!v.selectedMonthNumber}"/>
             </div>
+            
         </aura:if><br/>
-        <aura:if isTrue="{!v.Weeklybp.length > 0}">
+        <aura:if isTrue="{!v.Weeklybp.length>0}">
             <div style="height: 100vh;max-width: 2000px; margin: 0 auto;">
                 <aura:iteration items="{!v.Weeklybp}" var="a"></aura:iteration>
                 <div class="header">
@@ -152,12 +159,27 @@
                         </div>
                     </div>
                     <div>
-                        <!--a href="javascript:void(0);" class="top-button">Approved</a-->
-                        <span class="top-button">{!v.mbpStatus}</span>
+                        <aura:if isTrue="{!v.mbpStatus=='Approved'}">
+                            <span class="top-button">{!v.mbpStatus}</span>
+                            <aura:set attribute="else">
+                                <aura:if isTrue="{!v.mbpStatus=='Draft'}">
+                                  <a class="top-button" Id="{!v.recordId}"  onclick="{!c.sendForApp}" iconName='standard:approval'>{!v.mbpStatus}
+                                    </a>
+                                    <aura:set attribute="else">
+                                    	<span class="top-button">{!v.mbpStatus}</span>
+                                    </aura:set>
+                                </aura:if>
+                            </aura:set>
+                        </aura:if> 
                     </div>
                 </div>
                 <div>
-                    <c:fullcalanderComp month="{!v.selectedMonth}" year="{!v.selectedYear}"/>
+                    <aura:if isTrue="{!v.showApprovedCal}">
+                        <c:fullcalanderComp month="{!v.selectedMonth}" year="{!v.selectedYear}" aura:id="childComp"/>
+                    </aura:if> 
+                    <aura:if isTrue="{!v.showUnapprovedCal}">
+                        <c:MonthlyBeanPlanCalnder month="{!v.selectedMonth}" year="{!v.selectedYear}" aura:id="chilcally"/>
+                    </aura:if>>
                 </div>
             </div>
         </aura:if>

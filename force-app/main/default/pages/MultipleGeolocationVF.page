@@ -1,14 +1,20 @@
 <apex:page controller="UservisitTrackingController" applyBodyTag="False" sidebar="false"     showHeader="false" >
     <html  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ng-app="userVisit">
-        
+        <apex:pageMessages />
+        <apex:includeLightning />
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
         <head>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
             <apex:slds /> 
                 <c:scriptComponent />
-                    <script>              
-                    var userId = '{!userId}';
+                    <script>   
+                    debugger;
+            var userId = '{!userId}';
             var userName='{!userName}';
+            var selecteVisitDate = '{!visitdate}';
+            
+            var visitRecordList = '{!visitRecList}';
+            console.log("visitRecordList === >"+visitRecordList);
             var tbMarker = '{!URLFOR($Resource.Marker_Orange)}';
             var pendingMarker = '{!URLFOR($Resource.Marker_Green)}';
             var completedMarker = '{!URLFOR($Resource.Marker_Gray)}';
@@ -131,7 +137,7 @@
             </style>
         </head>
         
-        <body class="slds-scope" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <body class="slds-scope" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
             <div class="slds-col slds-size_12-of-12 slds-p-top_small">
                 <article class="slds-card">
                     <div class="slds-card__body slds-card__body_inner">

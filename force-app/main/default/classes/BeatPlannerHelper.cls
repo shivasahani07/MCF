@@ -1,10 +1,12 @@
-public class BeatPlannerHelper {
+public with sharing class  BeatPlannerHelper {
     @auraEnabled
-    Public Static List<Monthly_Beat_Plan__c> BeetplannerDatareturn(String month,string year){
+    Public Static FullCalendarController.alldataWrapper  BeetplannerDatareturn(String month,string year){
         List<Monthly_Beat_Plan__c> MBPlist=[SELECT id,Year__c,Status__c,Start_Date__c,OwnerId,Sales_User__c,Name,Month__c,End_Date__c,Month_Name__c,(SELECT id,Year__c,Name,Week_Identifier__c,Start_Day_of_Week__c,End_Day_of_Week__c,OwnerId,Monthly_Beat_Plan__c FROM Weekly_Beat_Plans__r) FROM Monthly_Beat_Plan__c WHERE Month_year__c=:year AND Month_Name__c=:month];
         system.debug('Monthly_Beat_Plan__c---------->'+MBPlist);
+        FullCalendarController.alldataWrapper newwarp = new FullCalendarController.alldataWrapper ();
+        newwarp=FullCalendarController.BeetplannerDatareturn(month,year);
         //userinfo.getName();
-        return MBPlist;
+        return newwarp;
         
         
     }
@@ -18,5 +20,40 @@ public class BeatPlannerHelper {
             mbp.Month_year__c=year;
         }
     }
+    
+    @AuraEnabled
+    public static void initiateApprovalProcess(Id recordId) {
+        // Query for the ProcessDefinitionId based on the process name
+        //String processName = 'Monthly_Beat_Expense_Approval';
+        Id currUserId = UserInfo.getUserId();
+        Id managerId = [SELECT Id, ManagerId FROM User WHERE Id =: currUserId].ManagerId;
+        if(managerId != null && !string.isBlank(managerId)){
+            Approval.ProcessSubmitRequest  pass = new Approval.ProcessSubmitRequest();
+            pass.setComments('Submitting request for approval automatically using Trigger');
+            pass.setObjectId(recordId);
+            pass.setProcessDefinitionNameOrId('Monthly_Beat_Expense_Approval');    
+            pass.setNextApproverIds(new List<Id> {managerId});          // Submit the approval request for the Opportunity
+            Approval.ProcessResult result = Approval.process(pass);
+        }
+    }
+    
+    
+    
+    
+    Public class alldataWrapper {
+        @AuraEnabled
+        public Monthly_Beat_Plan__c MBPlist {get; set;}
+        @AuraEnabled
+        public List<Visit__c> visitRecList {get;set;}
+        @AuraEnabled
+        Public List<KPI_Target__c> KpiTList {get; set;}
+        //@AuraEnabled
+        //Public integer totalCP {get; set;} 
+        // @AuraEnabled
+        // Public integer total {get; set;} 
+    }
+    
+    
+    
     
 }

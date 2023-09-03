@@ -1,3 +1,8 @@
+.THIS .progress-ring {
+    transform: scale(6) translate(1em,1em);
+    position: absolute
+}
+
 .THIS.progress-bar {
   width: 100px;
   height: 100px;

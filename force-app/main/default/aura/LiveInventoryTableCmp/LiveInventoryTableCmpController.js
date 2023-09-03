@@ -1,5 +1,6 @@
 ({
 	doInit : function(component, event, helper) {
+        var accId = component.get("v.accIdForChild");
 		helper.getStoreInventory(component, event);
 	},
     

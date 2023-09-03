@@ -105,13 +105,7 @@
                 </lightning:LayoutItem>
             </lightning:LayoutItem>
             
-             <lightning:LayoutItem  size="4">
-               <lightning:Layout>
-                            <lightning:LayoutItem size="12">
-                                    <c:mapcontainer recordId="{!v.accID}"  />
-                            </lightning:LayoutItem>
-                        </lightning:Layout>
-            </lightning:LayoutItem>
+             
             
             <lightning:LayoutItem padding="around-small" size="8">
                 <lightning:card >
@@ -195,7 +189,7 @@
                                                         </td>
                                                         <td style="background-color:#F5F5F5;">
                                                             <div>
-                                                                {!pastVisitRec.Check_In_Time__c}
+                                                                {!pastVisitRec.Visit_Time__c}
                                                             </div>
                                                         </td>
                                                         <td style="background-color:#F5F5F5;">
@@ -435,6 +429,13 @@
                         </lightning:tabset>
                     </lightning:LayoutItem>
                 </lightning:card>
+            </lightning:LayoutItem>
+            <lightning:LayoutItem  size="4">
+               <lightning:Layout>
+                            <lightning:LayoutItem size="12">
+                                    <c:mapcontainer recordId="{!v.accID}"  class="map"/>
+                            </lightning:LayoutItem>
+                        </lightning:Layout>
             </lightning:LayoutItem>
             
             

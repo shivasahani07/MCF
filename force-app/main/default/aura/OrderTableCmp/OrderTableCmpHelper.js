@@ -11,7 +11,8 @@
         
         action.setParams({
             'pageSize' : component.get("v.pageSize"),
-            'pageNumber' : component.get("v.pageNumber")
+            'pageNumber' : component.get("v.pageNumber"),
+            'accountId' : component.get("v.accIdForChild")
         });
         action.setCallback(this,function(response){
             var state = response.getState();

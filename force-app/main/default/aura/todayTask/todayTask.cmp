@@ -21,15 +21,15 @@
     <aura:attribute name="MonthTravelExpId" type="String"/>
     <aura:attribute name="visitRec" type="sObject" default="{sObjecttype : 'Visit__c'}"/>
     <aura:attribute name="visitIDtoStart" type="String"/>
-    <aura:attribute name="accountAddress" type="String"/>
+    <aura:attribute name="accountAddress" type="String"/> 
     <aura:attribute name="accIdToShow" type="String"/>
-    <aura:attribute name="visitRecordId" type="String" default="a220k000000VOcDAAW"/>
+    <aura:attribute name="SelectedVisitDateFromTaskComp" type="String"/>
+     <aura:registerEvent name="vfEvent" type="c:SendDataToVFPage"/>
     
     <aura:attribute name="ShowAmedVistPop" type="Boolean" default = "false"/>
     <aura:attribute name="visitDescription" type="String"/>
     <aura:attribute name="visitPlanedDate" type="String"/>
     <aura:attribute name="selectedVisitPlanedId" type="String"/>
-    
     <aura:attribute name="taskStatus" type="String" default = "In Progress"/>
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:attribute name="mapMarkers" type="Object"/>
@@ -135,7 +135,7 @@
                                     
                                     <lightning:layoutItem flexibility="auto" size="6" padding="around-small" class="mapDiv">
                                         <div class="custom-box">
-                                            <c:MultipleGeolocationAura visitRecordId="{!v.visitRecordId}"/>
+                                            <c:MultipleGeolocationAura SelectedVisitDate="{!v.SelectedVisitDateFromTaskComp}"/>
                                             <!--lightning:map 
                                                            mapMarkers="{! v.mapMarkers }" 
                                                            zoomLevel="{!v.zoomLevel}" /-->

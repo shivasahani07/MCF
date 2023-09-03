@@ -1,5 +1,21 @@
 <aura:component controller="DealerWrapper" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
-    <aura:handler name="change" value="{!v.this}" action="{!c.doInit}"/>  
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="accRecord" type="Account"/>
+    <aura:attribute name="accIdForChild" type="string"/>
+    
+    <aura:attribute name="CasePending" type="integer"/>
+    <aura:attribute name="CaseResolved" type="integer"/>
+    <aura:attribute name="CaseRaised" type="integer"/>
+    <aura:attribute name="InvoicesPending" type="integer"/>
+    <aura:attribute name="InvoicesPaid" type="integer"/>
+    <aura:attribute name="TotalInvoices" type="integer"/>
+    <aura:attribute name="TargetOrdersPending" type="integer"/>
+    <aura:attribute name="TargetOrdersAcheived" type="integer"/>
+    <aura:attribute name="TotalTargetOrders" type="integer"/>
+    <aura:attribute name="TargetPending" type="integer"/>
+    <aura:attribute name="TargetAcheived" type="integer"/>
+    <aura:attribute name="TotalTargetSet" type="integer"/>
+    
     
     <lightning:layout >
         <lightning:layoutItem size="12">
@@ -19,18 +35,18 @@
                         </h1>
                     </div>
                     <div class="slds-grid">
-                        <div class="slds-col slds-m-around_x-medium slds-box slds-m-right_medium" style="background: white;height:130%;">
+                        <div class="slds-col slds-m-around_x-medium slds-box slds-m-right_medium" style="background: white;height:130%">
                             <div class="slds-grid slds-wrap">
                                 <div class="slds-col slds-size_7-of-12" style="font-size: 110%;padding-left: 3rem;padding-top: 1rem">
-                                    <span><strong>Target set by <br/>Company X</strong></span>
-                                </div> 
+                                    <span><strong>Total Target <br/>Set</strong></span>
+                                </div>
                                 <div class="slds-col slds-size_4-of-12">
                                     <div class="slds-progress-ring slds-progress-ring_large">
-                                        <!--<div class="slds-progress-ring slds-progress-ring_large">
-                                    <lightning:progressRing value="75" size="large" variant="brand"/>
-                                    <div class="slds-progress-ring__content">75</div>
-                                </div>-->
-                                        <div class="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" style="--value:65"></div>
+                                        
+                                        <div class="slds-progress-ring slds-progress-ring_large">
+                                            <lightning:progressRing value="{!v.TotalTargetSet}" size="large" variant="brand" style="width: 190px; height: 190px;"/>
+                                            <div class="slds-progress-ring__content">{!v.TotalTargetSet} L</div>
+                                        </div>
                                     </div>
                                 </div> 
                             </div>
@@ -46,8 +62,8 @@
                                 <div class="slds-col slds-size_4-of-12">
                                     <div class="slds-progress-ring slds-progress-ring_large">
                                         <div class="slds-progress-ring slds-progress-ring_large">
-                                            <lightning:progressRing value="50" size="large" variant="brand" style="width: 190px; height: 190px;"/>
-                                            <div class="slds-progress-ring__content">50</div>
+                                            <lightning:progressRing value="{!v.TargetAcheived}" size="large" variant="brand" style="width: 190px; height: 190px;"/>
+                                            <div class="slds-progress-ring__content">{!v.TargetAcheived} L</div>
                                         </div>
                                     </div>
                                 </div> 
@@ -61,8 +77,8 @@
                                 <div class="slds-col slds-size_4-of-12">
                                     <div class="slds-progress-ring slds-progress-ring_large">
                                         <div class="slds-progress-ring slds-progress-ring_large">
-                                            <lightning:progressRing value="25" size="large" variant="base-autocomplete"/>
-                                            <div class="slds-progress-ring__content">25</div>
+                                            <lightning:progressRing value="{!v.TargetPending}" size="large" variant="base-autocomplete"/>
+                                            <div class="slds-progress-ring__content">{!v.TargetPending} L</div>
                                         </div>
                                     </div>
                                 </div> 
@@ -86,8 +102,8 @@
                                 <div class="slds-col slds-size_4-of-12">
                                     <div class="slds-progress-ring slds-progress-ring_large ">
                                         <div class="slds-progress-ring slds-progress-ring_large progress-bar">
-                                            <lightning:progressRing value="75" size="large" variant="expired"/>
-                                            <div class="slds-progress-ring__content">75</div>
+                                            <lightning:progressRing value="{!v.TotalTargetOrders}" size="large" variant="expired"/>
+                                            <div class="slds-progress-ring__content">{!v.TotalTargetOrders}</div>
                                         </div>
                                     </div>
                                     <!--<div class="progress-bar">
@@ -104,8 +120,8 @@
                                 <div class="slds-col slds-size_4-of-12">
                                     <div class="slds-progress-ring slds-progress-ring_large">
                                         <div class="slds-progress-ring slds-progress-ring_large">
-                                            <lightning:progressRing value="50" size="large" variant="expired"/>
-                                            <div class="slds-progress-ring__content">50</div>
+                                            <lightning:progressRing value="{!v.TargetOrdersAcheived}" size="large" variant="expired"/>
+                                            <div class="slds-progress-ring__content">{!v.TargetOrdersAcheived}</div>
                                         </div>
                                     </div>
                                 </div> 
@@ -119,8 +135,8 @@
                                 <div class="slds-col slds-size_4-of-12">
                                     <div class="slds-progress-ring slds-progress-ring_large">
                                         <div class="slds-progress-ring slds-progress-ring_large">
-                                            <lightning:progressRing value="25" size="large" variant="expired"/>
-                                            <div class="slds-progress-ring__content">25</div>
+                                            <lightning:progressRing value="{!v.TargetOrdersPending}" size="large" variant="expired"/>
+                                            <div class="slds-progress-ring__content">{!v.TargetOrdersPending}</div>
                                         </div>
                                     </div>
                                 </div> 
@@ -143,14 +159,11 @@
                                     <span><strong>Total Invoices <br/>Generated</strong></span>
                                 </div>
                                 <div class="slds-col slds-size_4-of-12">
-                                    <div class="slds-progress-ring slds-progress-ring_large ">
-                                        <!--<div class="slds-progress-ring slds-progress-ring_large progress-bar">
-                                    <lightning:progressRing value="75" size="large" variant="warning"/>
-                                    <div class="slds-progress-ring__content">75</div>
-                                </div>-->
-                                    </div>
-                                    <div class="progress-bar">
-                                        <progress value="75" min="0" max="100" style="visibility:hidden;height:0;width:0;">75%</progress>
+                                    <div class="slds-progress-ring slds-progress-ring_large">
+                                        <div class="slds-progress-ring slds-progress-ring_large">
+                                            <lightning:progressRing value="{!v.TotalInvoices}" size="large" variant="warning"/>
+                                            <div class="slds-progress-ring__content">{!v.TotalInvoices}</div>
+                                        </div>
                                     </div>
                                 </div> 
                             </div>
@@ -163,8 +176,8 @@
                                 <div class="slds-col slds-size_4-of-12">
                                     <div class="slds-progress-ring slds-progress-ring_large">
                                         <div class="slds-progress-ring slds-progress-ring_large">
-                                            <lightning:progressRing value="50" size="large" variant="warning"/>
-                                            <div class="slds-progress-ring__content">50</div>
+                                            <lightning:progressRing value="{!v.InvoicesPaid}" size="large" variant="warning"/>
+                                            <div class="slds-progress-ring__content">{!v.InvoicesPaid}</div>
                                         </div>
                                     </div>
                                 </div> 
@@ -178,8 +191,8 @@
                                 <div class="slds-col slds-size_4-of-12">
                                     <div class="slds-progress-ring slds-progress-ring_large">
                                         <div class="slds-progress-ring slds-progress-ring_large">
-                                            <lightning:progressRing value="25" size="large" variant="warning"/>
-                                            <div class="slds-progress-ring__content">25</div>
+                                            <lightning:progressRing value="{!v.InvoicesPending}" size="large" variant="warning"/>
+                                            <div class="slds-progress-ring__content">{!v.InvoicesPending}</div>
                                         </div>
                                     </div>
                                 </div> 
@@ -203,8 +216,8 @@
                                 <div class="slds-col slds-size_4-of-12">
                                     <div class="slds-progress-ring slds-progress-ring_large ">
                                         <div class="slds-progress-ring slds-progress-ring_large progress-bar">
-                                            <lightning:progressRing value="75" size="large" variant="base-autocomplete"/>
-                                            <div class="slds-progress-ring__content">75</div>
+                                            <lightning:progressRing value="{!v.CaseRaised}" size="large" variant="base-autocomplete"/>
+                                            <div class="slds-progress-ring__content">{!v.CaseRaised}</div>
                                         </div>
                                     </div>
                                     <div class="progress-bar">
@@ -221,8 +234,8 @@
                                 <div class="slds-col slds-size_4-of-12">
                                     <div class="slds-progress-ring slds-progress-ring_large">
                                         <div class="slds-progress-ring slds-progress-ring_large">
-                                            <lightning:progressRing value="50" size="large" variant="base-autocomplete"/>
-                                            <div class="slds-progress-ring__content">50</div>
+                                            <lightning:progressRing value="{!v.CaseResolved}" size="large" variant="base-autocomplete"/>
+                                            <div class="slds-progress-ring__content">{!v.CaseResolved}</div>
                                         </div>
                                     </div>
                                 </div> 
@@ -236,8 +249,8 @@
                                 <div class="slds-col slds-size_4-of-12">
                                     <div class="slds-progress-ring slds-progress-ring_large">
                                         <div class="slds-progress-ring slds-progress-ring_large">
-                                            <lightning:progressRing value="25" size="large" variant="base-autocomplete"/>
-                                            <div class="slds-progress-ring__content">25</div>
+                                            <lightning:progressRing value="{!v.CasePending}" size="large" variant="base-autocomplete"/>
+                                            <div class="slds-progress-ring__content">{!v.CasePending}</div>
                                         </div>
                                     </div>
                                 </div> 

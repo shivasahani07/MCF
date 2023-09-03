@@ -4,18 +4,23 @@
     <aura:attribute name="dealerProduct" type="boolean" default="false"/>
     <aura:attribute name="livInventory" type="boolean" default="false"/>
     <aura:attribute name="order" type="boolean" default="false"/>
+    <aura:attribute name="orderDetail" type="boolean" default="false"/>
+    <aura:attribute name="goalSetting" type="boolean" default="false"/>
     <aura:attribute name="invoice" type="boolean" default="false"/>
     <aura:attribute name="right" type="boolean" default="true"/>
     <aura:attribute name="left" type="boolean" default="false"/>
     <aura:attribute name="withoutlabel" type="boolean" default="true"/>
     <aura:attribute name="withlabel" type="boolean" default="false"/>
+    <aura:attribute name="accountId" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
     <lightning:card>
         <lightning:layout>
             <div style="background-color=#D7EAEB;">
                 <lightning:layoutItem size="2">
                     <!-- Sidebar content without label -->
                     <aura:if isTrue="{!v.withoutlabel}">
-                        <div class="sidebar">
+                        <div class="sidebar" style="margin-top: 96px;">
                             <aura:if isTrue="{!v.right}">
                                 <div class="slds-p-left_x-large slds-float_right">
                                     <lightning:button variant="bare"  iconName="utility:jump_to_right" onclick="{!c.toggleRightSidebar}" class="slds-p-left_medium slds-button_full-width"/>  
@@ -39,7 +44,7 @@
                                 <lightning:button  variant="bare"  iconName="utility:richtextbulletedlist" onclick="{!c.navigateOrd}" class="custom-button slds-p-left_medium slds-button "/>
                             </div>
                             <div class="slds-p-bottom_x-small   slds-p-left_x-small ">
-                                <lightning:button  variant="bare"  iconName="utility:watchlist" onclick="{!c.navigateInv}" class="custom-button slds-p-left_medium slds-button"/>
+                                <lightning:button  variant="bare"  iconName="utility:watchlist" onclick="{!c.navigateGSetting}" class="custom-button slds-p-left_medium slds-button"/>
                             </div>
                             <div class="slds-p-bottom_x-small   slds-p-left_x-small ">
                                 <lightning:button  variant="bare"  iconName="utility:form" onclick="{!c.navigateInv}" class="custom-button slds-p-left_medium slds-button"/>
@@ -54,7 +59,7 @@
                     
                     <!-- Sidebar content with Labels -->
                     <aura:if isTrue="{!v.withlabel}">
-                        <div class="sidebar1">
+                        <div class="sidebar1" style="margin-top: 96px;">
                             <aura:if isTrue="{!v.left}">
                                 <div class="slds-p-left_x-large slds-float_right">
                                     <lightning:button  variant="bare"  iconName="utility:jump_to_left" onclick="{!c.toggleLeftSidebar}" class="slds-p-left_medium"/>
@@ -79,9 +84,9 @@
                             <div class="slds-p-bottom_x-small   slds-p-left_x-small "   >
                                 <lightning:button variant="bare"  label="Orders"  iconName="utility:richtextbulletedlist" onclick="{!c.navigateOrd}" class="custom-button1 slds-p-left_medium slds-button"/>
                             </div>
-                            <div class="slds-p-bottom_x-small   slds-p-left_x-small "   >
-                                <lightning:button variant="bare"  label="Goal Setting"  iconName="utility:watchlist" onclick="{!c.navigateInv}" class="custom-button1 slds-p-left_medium slds-button"/>
-                            </div>
+                            <!--div class="slds-p-bottom_x-small   slds-p-left_x-small "   >
+                                <lightning:button variant="bare"  label="Goal Setting"  iconName="utility:watchlist" onclick="{!c.navigateGSetting}" class="custom-button1 slds-p-left_medium slds-button"/>
+                            </div-->
                             <div class="slds-p-bottom_x-small   slds-p-left_x-small "   >
                                 <lightning:button variant="bare"  label="Invoices"  iconName="utility:form" onclick="{!c.navigateInv}" class="custom-button1 slds-p-left_medium slds-button"/>
                             </div>
@@ -95,9 +100,9 @@
             
             <lightning:layoutItem size="10">
                 <div class="slds-grid slds-wrap slds-m-bottom_xx-large">
-                    <div class="slds-col slds-size_2-of-3 slds-p-left_xx-large">
+                    <!--div class="slds-col slds-size_2-of-3 slds-p-left_xx-large">
                         <c:SearchCmp/>
-                    </div>
+                    </div-->
                    
                     <div class="slds-col slds-size_1-of-3 slds-text-align_right slds-p-top_medium">
                         <lightning:avatar variant="circle" src="https://www.lightningdesignsystem.com/assets/images/avatar2.jpg" initials="AW" fallback-icon-name="standard:person_account" alternative-text="Amy Weaver" class="slds-m-right_small"></lightning:avatar>
@@ -108,19 +113,25 @@
                     <!-- Main content goes here 
                     Main Content-->
                     <aura:if isTrue="{!v.dashBoard}">
-                        <c:DealerDashboardCmp/>
+                        <c:DealerDashboardCmp accIdForChild="{!v.accountId}"/>
                     </aura:if>
                     <aura:if isTrue="{!v.dealerProduct}">
-                        <c:DealerProduct/>
+                        <c:DealerProduct accIdForChild="{!v.accountId}"/>
                     </aura:if>
                     <aura:if isTrue="{!v.livInventory}">
-                        <c:LiveInventoryTableCmp/>
+                        <c:LiveInventoryTableCmp accIdForChild="{!v.accountId}"/>
                     </aura:if>
                     <aura:if isTrue="{!v.order}">
-                        <c:OrderTableCmp/>
+                        <c:OrderTableCmp accIdForChild="{!v.accountId}"/>
+                    </aura:if>
+                    <aura:if isTrue="{!v.orderDetail}">
+                        <c:OrderDetailsCmp accIdForChild="{!v.accountId}"/>
+                    </aura:if>
+                    <aura:if isTrue="{!v.goalSetting}">
+                        <c:GoalSettingPage accIdForChild="{!v.accountId}"/>
                     </aura:if>
                     <aura:if isTrue="{!v.invoice}">
-                        <c:InvoiceTableCmp/>
+                        <c:InvoiceTableCmp accIdForChild="{!v.accountId}"/>
                     </aura:if>
                 </div>
             </lightning:layoutItem>

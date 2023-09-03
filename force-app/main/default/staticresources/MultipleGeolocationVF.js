@@ -1,27 +1,46 @@
-// You can calculate directions (using a variety of methods of transportation) by using the DirectionsService object.
 var directionsService;
 // Define a variable with all map points.
 var _mapPoints;
 var _polyPoints;
 var markerLocationList;
+ var GeolocationFromVF = new Array();
 // Define a DirectionsRenderer variable.
 var _directionsRenderer = '';
 
 var map;
 var locMap = new Map();
-
+var visitDataGeolocation = [];
+var queryString = window.location.search;
+var visitdate = queryString.split("?id=").pop();
 
 function initMap() {
     debugger;
-    markerLocationList = new Array();
-    markerLocationList.push({lat:12.912120,lng:77.589623});
-    markerLocationList.push({lat:12.912812,lng:77.609219});
-    markerLocationList.push({lat:12.934533,lng:77.626579});
-    markerLocationList.push({lat:12.908136,lng:77.647608});
+    if(visitdate === "undefined"){
+        var currentdate = new Date();
+        var inputDateString = currentdate.toLocaleString();
+        var inputDate = new Date(inputDateString);
+        var formattedDate = inputDate.toISOString().split('T')[0];
+        visitdate = formattedDate;
+    }
+    var datedata = visitdate;
+    console.log('datedata ===> '+datedata);
+    UservisitTrackingController.fetchPlannedVisitDetails(datedata, function(result, event) {
+        debugger;
+        if (event.status) {
+            var objlocation = result.map(item => {
+                return { lat: item.Geo_Location__Latitude__s, lng: item.Geo_Location__Longitude__s };
+               });
+           getLocation(objlocation);
+        } else if (event.type === 'exception') {
+            console.log(event.message);
+        } else {
+            console.log('Unknown error occurred.');
+        }
+    });
+    
+    function getLocation(markerLocationList){
      _mapPoints = new Array();
      _polyPoints = new Array();
-    
-
      var myOptions = {
           zoom: 14,
           center: new google.maps.LatLng(0, 0),
@@ -42,14 +61,12 @@ function initMap() {
     });
     flightPath.setMap(map); */
 
-
-     debugger;
+    // debugger;
      directionsService = new google.maps.DirectionsService();
      _directionsRenderer = new google.maps.DirectionsRenderer({
           map: map, suppressMarkers: true,
           // suppressPolylines: true
      });
-
      /*if (repLat && repLong) {
           markStore(map, {
                name: 'Your Location',
@@ -57,7 +74,6 @@ function initMap() {
           }, getMarkerIconURL('CURRENTLOC'));
           // _mapPoints.push(new google.maps.LatLng(repLat, repLong)); //uncomment this line if you want to add route from current loc
      }*/
-
      console.log('--- to visit' + markerLocationList);
      for (var key in markerLocationList) {
           if (key != 'remove') {
@@ -72,18 +88,16 @@ function initMap() {
                }
           }
      }
-
-
      console.log('_mapPoints::' + _mapPoints);
      // below method is used to generate maproad with marker
      if (_mapPoints.length > 0) 
           getRoutePointsAndWaypoints();
-     
-
+    }
 }
 
+
 function getRoutePointsAndWaypoints() {
-    debugger;
+   // debugger;
     // Define a variable for waypoints.
      var _waypoints = new Array();
      if (_mapPoints.length > 2) { // Waypoints will be come.
@@ -103,8 +117,9 @@ function getRoutePointsAndWaypoints() {
           drawRoute(_mapPoints[_mapPoints.length - 1], _mapPoints[_mapPoints.length - 1], _waypoints);
      }
 }
+
 function drawRoute(originAddress, destinationAddress, _waypoints) {
-    debugger;
+   // debugger;
     // Define a request variable for route .
      var _request = '';
      console.log(originAddress, destinationAddress, _waypoints)
@@ -125,7 +140,6 @@ function drawRoute(originAddress, destinationAddress, _waypoints) {
           };
      }
      console.log(_request);
-
      // This will take the request and draw the route and return response and status as output
      directionsService.route(_request, /* customDirectionsRenderer */
                function (_response, _status) {
@@ -134,12 +148,10 @@ function drawRoute(originAddress, destinationAddress, _waypoints) {
                _directionsRenderer.setDirections(_response);
           }
      });
-
-
 }
 
 function customDirectionsRenderer(response, status) {
-    debugger;
+   // debugger;
      if (status == google.maps.DirectionsStatus.OK) {
           _directionsRenderer.setDirections(response);
           var bounds = new google.maps.LatLngBounds();
@@ -168,10 +180,9 @@ function customDirectionsRenderer(response, status) {
 }
 
 function markStore(map, storeInfo, iconLink) {
-    debugger;
+   // debugger;
      // Create a marker and set its position.
      var marker = new google.maps.Marker({map: map, position: storeInfo.location, title: storeInfo.name, icon: iconLink});
-
      // show store info when marker is clicked
      marker.addListener('click', function () {
           showStoreInfo(storeInfo);
@@ -181,7 +192,7 @@ function markStore(map, storeInfo, iconLink) {
 }
 
 function getMarkerIconURL(status) {
-    debugger;
+   // debugger;
      if (status === 'PENDING') 
           return window.location.origin + pendingMarker;
       else if (status === 'COMPLETED') 
@@ -192,7 +203,6 @@ function getMarkerIconURL(status) {
           return window.location.origin + lapseMarker;
       else 
           return window.location.origin + currentMarker;
-     
 }
 
 
@@ -201,13 +211,11 @@ function showStoreInfo(storeInfo) {
      var info_div = document.getElementById('info_div');
      info_div.innerHTML = storeInfo.name;
      var content = '<div><span>' + storeInfo.name + '</span>';
-
      // Create info window
      var infowindow = new google.maps.InfoWindow({
           maxWidth: 350,
           pixelOffset: new google.maps.Size(-10, -25)
      });
-
      infowindow.setContent(content);
      infowindow.open(map);
      infowindow.setPosition(storeInfo.location);

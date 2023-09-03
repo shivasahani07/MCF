@@ -1,30 +1,12 @@
 ({
 	SearchHelper : function(component, event, helper) {
-        var action = component.get('c.fetchAcc');
-         action.setParams({ 
-          searchKey : component.get("v.searchKeyword"),
-             });
-         action.setCallback(this, function(response){
-            var state = response.getState();
-            if(state === "SUCCESS"){
-                var allValues = response.getReturnValue();
-                console.log("allValues--->>> " + JSON.stringify(allValues));
-                //component.set('v.activeSections', allValues.Name);
-                component.set('v.accList', allValues);
-            }
-            else if(state === "ERROR") {
-                var errors = response.getError();
-                if(errors){
-                    if(errors[0] && errors[0].message){
-                        console.log("Error Message: " + errors[0].message);
-                    }
-                }
-                else{
-                    console.log("Unknown Error");
-                }
-            }
+        debugger;
+        var action = component.get('c.getAccounts');
+        action.setCallback(this,function(actionResult){
+            component.set('v.accList', actionResult.getReturnValue());
         });
-        $A.enqueueAction(action);
+        $A.enqueueAction(action); 
+        //  searchKey : component.get("v.searchKeyword"),             
     }
 
 })

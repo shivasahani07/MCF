@@ -6,12 +6,13 @@ trigger OpportunityTrigger on Opportunity (before insert,after insert,after upda
     }
     if(trigger.isUpdate && Trigger.isAfter){
         OpportunityTriggerHelper.createProjectOnClosedWon(trigger.new);
+      
     }
-    /*if(trigger.isInsert && Trigger.isBefore){
-        OpportunityTriggerHelper.assignDefautOppStage(trigger.new);
+    if(trigger.isInsert && Trigger.isAfter){
+         OpportunityTriggerHelper.createFolderforOpp(trigger.new);
     }
     
-    if(trigger.isInsert && Trigger.isAfter){
+    /*if(trigger.isInsert && Trigger.isAfter){
         OpportunityTriggerHelper.createTaskBasedOnOpportunityStageForITW(Trigger.new,Trigger.oldMap);
         OpportunityTriggerHelper.createFolders(Trigger.newMap);
         AttachPitchDeck.updateContentDoc(trigger.newMap);

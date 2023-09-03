@@ -20,7 +20,7 @@
         <members>*</members>
         <name>ApexTrigger</name>
     </types>
-    <types>git 
+    <types>
         <members>*</members>
         <name>AuraDefinitionBundle</name>
     </types>
@@ -30,7 +30,7 @@
     </types>
     <types>
         <members>*</members>
-        <name>StaticResource</name>
+         <name>StaticResource</name>
     </types>
     <version>57.0</version>
 </Package>

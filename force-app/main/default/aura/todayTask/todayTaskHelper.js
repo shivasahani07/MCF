@@ -14,6 +14,7 @@
         if(selectedDate != null && selectedDate != undefined){
             formattedDate = selectedDate;
         }
+        component.set('v.SelectedVisitDateFromTaskComp', formattedDate);
         component.set('v.selectedDate', formattedDate);
         var action = component.get('c.getAllVisitTodays');
         action.setParams({
@@ -23,6 +24,25 @@
             if(response.getState()==='SUCCESS'){
                 var result = response.getReturnValue();
                 if(result != null){
+                    /*
+                    var visitRecordidList = [];
+                    var obj = {lat: "", long: ""};
+                    var objMap = new Map();
+                    for(var i=0;i<result.visitList.length;i++){
+                        if(result.visitList[i].Geo_Location__Longitude__s !=null){
+                            visitRecordidList.push(result.visitList[i]);
+                        }
+                    }
+                    var arrayMapKeys = [];
+                    var TempMapListLast = [];
+                    var geolocationVisitData = visitRecordidList;
+                    for(var key in visitRecordidList){
+                      arrayMapKeys.push({key:key,value:(visitRecordidList)[key]});
+                        TempMapListLast.push({value:(visitRecordidList)[key]});
+                    }
+                    
+                    component.set("v.visitRecordId",visitRecordidList.join('&'));
+                    */
                     if(result.visitList != undefined && result.visitList != null && result.visitList != ''){
                         component.set('v.taskList', result.visitList);
                         component.set('v.completedVisit', result.completedVisit); 
@@ -37,7 +57,6 @@
                             component.set("v.ShowEndDay",true);
                             component.set('v.disableVisitButtons', true);
                         }
-                        
                         var objlocation = [];
                         var accountAddressOBj = [];
                         var  location = {Street : '',City:'',State:'',PostalCode : '',Country : ''}
@@ -81,10 +100,8 @@
                 console.log(JSON.stringify(response.getError()));
                 this.showErrorMessage(component, event, helper);
                 return;
-            }
-            
+            } 
         });
-        
         $A.enqueueAction(action);
     },
     
@@ -251,15 +268,8 @@
             var MonthName=monthNames[newDate.getMonth()].slice(0,3);
             dateObj.month = MonthName;
             dates.push(dateObj);
-            
         }
         component.set("v.dates", dates);
-        
-        
-        
     },
-    
-  
-    
-    
+
 })

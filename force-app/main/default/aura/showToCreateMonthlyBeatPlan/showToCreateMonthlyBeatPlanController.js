@@ -8,13 +8,13 @@
             var result = response.getReturnValue();
             if(state == 'SUCCESS') {
                 if(result.length>0){
-                     for(let i=0;i<result.length;i++){
+                    for(let i=0;i<result.length;i++){
                         result[i].targetvalue=null;
-                     }
+                    }
                 }
                 component.set("v.RoleAndKPIList",result);
             }else{
-               
+                
             }
         });
         $A.enqueueAction(action);
@@ -33,23 +33,26 @@
         console.log('ROLE KPI---'+JSON.stringify(component.get("v.RoleAndKPIList")));
         console.log('startDate---'+JSON.stringify(startDate));
         console.log('EndDate---'+JSON.stringify(EndDate));
-
-
+        
+        
         var action = component.get("c.GetAllMonthlyBeatPlanner");
         action.setParams({
             "StartDate":startDate,
-             "LastDate":EndDate,
-             "WrapperRecList":component.get("v.RoleAndKPIList")
+            "LastDate":EndDate,
+            "WrapperRecList":component.get("v.RoleAndKPIList")
         });
         action.setCallback(this, function(response){
             var state = response.getState();
             if(state == 'SUCCESS') {
                 component.set("v.ShowToCreateBeatPlanne",false);
+                var cmpEvent = component.getEvent("openParent"); 
+               
+                cmpEvent.fire(); 
             }else{
                 component.set("v.ShowToCreateBeatPlanne",false);
             }
         });
         $A.enqueueAction(action);
-
+        
     }
 })

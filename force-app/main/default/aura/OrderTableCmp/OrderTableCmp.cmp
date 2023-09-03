@@ -1,26 +1,31 @@
 <aura:component controller="OrderController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="openmodel" type="boolean"/>
     <aura:attribute name="ordList" type="Order[]"/>
     <aura:attribute name="pageNumber" type="Integer" default="1"/>
     <aura:attribute name="pageSize" type="Integer" default="10"/>
     <aura:attribute name="isLastPage" type="Boolean" default="false"/>
     <aura:attribute name="dataSize" type="Integer" default="0"/>
+    <aura:attribute name="accIdForChild" type="String"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <c:NewOrderCmp aura:id="eventPopId"/>  
     
     <lightning:layout >
         <lightning:layoutItem size="12">
             <div class="slds-m-left_xx-large">
-                
                 <lightning:card>
-                    <aura:set attribute="title">
-                        <div class="slds-page-header__name">
-                            <div class="slds-page-header__name-title">
+                <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_11-of-12">
                                 <h1>
                                     <span class="slds-page-header__title" style="font-size: 175%;"><Strong>Orders</Strong></span>
                                 </h1>
                             </div>
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-12"   >
+                                <lightning:button variant="bare"  label="New Order"  iconName="utility:add" onclick="{!c.newOrder}" class="custom-button"/>
+                            </div>
                         </div>
-                    </aura:set>
+                
                     <aura:set attribute="footer">
                         <div class="slds-align_absolute-center"> 
                             <div class="slds-p-right_xx-small">
@@ -88,7 +93,7 @@
                                         </td>
                                         <td  data-label="Order Id" style="background-color: #dddddd;width:150px;text-align:center;padding:5px;">
                                             <div  title="{!ord.OrderNumber}">
-                                                <a onclick="{!c.accountselected}" data-recId="{!ord.Id}">
+                                                <a onclick="{!c.orderDetail}" data-recId="{!ord.Id}">
                                                     <p>{!ord.OrderNumber}</p>
                                                 </a>
                                             </div>

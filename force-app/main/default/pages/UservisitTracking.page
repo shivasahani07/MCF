@@ -8,7 +8,7 @@
             <apex:slds /> 
                 <c:scriptComponent />
                     <script>              
-                    var userId = '{!userId}';
+            var userId = '{!userId}';
             var userName='{!userName}';
             var tbMarker = '{!URLFOR($Resource.Marker_Orange)}';
             var pendingMarker = '{!URLFOR($Resource.Marker_Green)}';

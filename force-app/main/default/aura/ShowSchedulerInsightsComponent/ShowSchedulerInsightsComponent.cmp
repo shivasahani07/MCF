@@ -23,8 +23,8 @@
         </div>
         </aura:if>
         <aura:if isTrue="{!v.ShowToCreateMonthlyBeatPlan}">
-            <div style="margin-top:1%; margin-left:0.5%; margin-right:0.5%">
-                <c:showToCreateMonthlyBeatPlan selectedMonthNumber="{!v.selectedMonthNumber}"/>
+            <div style="margin-top:1%; margin-left:1.5%; margin-right:1%">
+                <c:SchedulerInsightNoRecordPage />
             </div>
         </aura:if>
     </div>

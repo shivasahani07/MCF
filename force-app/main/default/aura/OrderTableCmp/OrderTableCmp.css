@@ -1,54 +1,9 @@
-.THIS.table {
-			border-collapse: collapse;
-		}
-		.THIS.th {
-			background-color:green;
-			Color:white;
-		}
-		.THIS.th, .THIS.td {
-			width:150px;
-			text-align:center;
-			padding:5px;
-		}
-        .THIS.td {
-            border-top-left-radius:3px;
-            background-color: #dddddd;
-		}
-		
-		.THIS.gfg {
-			border-collapse:separate;
-			border-spacing:0 15px;
-            
-		}
-		.THIS.h1 {
-			color:green;
-		}
-	
-
-/*.THIS.table {
-			border-collapse: collapse;
-		}
-.THIS.th {
-			background-color:green;
-			Color:white;
-		}
-.THIS.th, .THIS.td {
-			width:150px;
-			text-align:center;
-			padding:5px;
-		}
-.THIS.td {
-            border-top-left-radius:3px;
-            background-color: #dddddd;
-		}
-.THIS.geeks {
-            background-color: #dddddd;
-		}
-.THIS.gfg {
-			border-collapse:separate;
-			border-spacing:0 15px;
-            
-		}
-.THIS.h1 {
-			color:green;
-		}*/
+.THIS .custom-button{
+    background:  #5FADB0 no-repeat;
+    color:white;
+    font-weight : bold ;
+    width: 120px;
+    align-content: center;
+    border-radius: 8px;
+    box-shadow:none;   
+}

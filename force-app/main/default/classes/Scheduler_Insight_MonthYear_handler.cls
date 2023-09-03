@@ -7,4 +7,11 @@ public class Scheduler_Insight_MonthYear_handler {
          System.debug('getAllMBPList ==>'+getAllMBPList);
         return getAllMBPList;
     }
+    
+    @AuraEnabled
+    Public static List<Day_Visit_Plan__c> getMonthlyRecord(String month,string year){
+        List<Day_Visit_Plan__c> getAllDayVisitPlanRecList = [Select Id,Start_Date__c,End_Date__c,Total_Distance__c From Day_Visit_Plan__c where Service_Executive__c =: userInfo.getUserId() AND Month_year__c=:year AND Month_Name__c=:month];
+        
+        return getAllDayVisitPlanRecList;
+    }
 }

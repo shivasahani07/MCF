@@ -166,7 +166,8 @@
         let Array=str.split(' ');
         let Month=Array[0];
         let Year=Array[1];
-        var cmpEvent = component.getEvent("sampleCmpEvent"); 
+        var cmpEvent = component.getEvent("sampleCmpEvent");
+        debugger;
         //Set event attribute value
         cmpEvent.setParams({
             "Month" : Month,

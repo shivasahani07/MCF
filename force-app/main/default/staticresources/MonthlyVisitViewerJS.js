@@ -69,11 +69,11 @@ $(document).ready(function () {
                 weekNumbers: true,
                 eventDrop: function (event, delta, revertFunc) {
                     debugger;
-                    toastr.success("Button has been enabled successfully!", "Success", {
-                        closeButton: true,
-                        progressBar: true,
-                        positionClass: "toast-top-right"
-                    });
+                    // toastr.success("Button has been enabled successfully!", "Success", {
+                    //     closeButton: true,
+                    //     progressBar: true,
+                    //     positionClass: "toast-top-right"
+                    // });
                     // alert(event.title + " was dropped on " + event.start.format());
                     if (!confirm("Are you sure about this change? ")) {
                         revertFunc();
@@ -96,12 +96,12 @@ $(document).ready(function () {
                     }
                 },
                 eventClick: function (event, jsEvent, view) {
-                    toastr.success("Button has been enabled successfully!", "Success", {
-                        closeButton: true,
-                        progressBar: true,
-                        positionClass: "toast-top-right"
-                    });
-                    // alert('abc');
+                    // toastr.success("Button has been enabled successfully!", "Success", {
+                    //     closeButton: true,
+                    //     progressBar: true,
+                    //     positionClass: "toast-top-right"
+                    // });
+                    // // alert('abc');
                     debugger;
                     selectedEvent = event;
 
@@ -209,11 +209,11 @@ $(document).ready(function () {
             if(result!=null){
                 let index = repVisits.findIndex(item=>item.id==currentAccount);
                 repVisits[index].id = result;
-                toastr.success("VISIT CreatedS Successfully!", "Success", {
-                    closeButton: true,
-                    progressBar: true,
-                    positionClass: "toast-top-right"
-                });
+                // toastr.success("VISIT CreatedS Successfully!", "Success", {
+                //     closeButton: true,
+                //     progressBar: true,
+                //     positionClass: "toast-top-right"
+                // });
                 // alert("VISIT Created Successfully !")
             }else{
                 alert('Error to create visit')
@@ -607,11 +607,11 @@ $(document).ready(function () {
     function tagKPIToVisit(){
         MonthlyVisitViewerController.tagKIPToVisit(selectedEvent.id,selectedKPIId, function (result, event) {
             debugger;
-            toastr.success("Button has been enabled successfully!", "Success", {
-                closeButton: true,
-                progressBar: true,
-                positionClass: "toast-top-right"
-            });
+            // toastr.success("Button has been enabled successfully!", "Success", {
+            //     closeButton: true,
+            //     progressBar: true,
+            //     positionClass: "toast-top-right"
+            // });
             $("#myModal").hide();
         });
     }

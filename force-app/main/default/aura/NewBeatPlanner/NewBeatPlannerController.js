@@ -69,6 +69,8 @@
                     component.set("v.ShowMonthlyBeatPlan",true);
                     // wrappdata.visitRecList[0].Visit__r
                     component.set("v.Weeklybp",wrappdata.MBPlist.Weekly_Beat_Plans__r);
+                    component.set("v.weeklyWrapper",wrappdata.weeklyWrapper);
+                    component.set("v.kpiTargetsName",wrappdata.MBPlist.KPI_Targets__r)
                     component.set("v.recordId",wrappdata.MBPlist.Id);
                     component.set("v.mbpName",wrappdata.MBPlist.Name);
                     component.set("v.month",wrappdata.MBPlist.Month_Name__c);

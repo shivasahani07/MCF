@@ -33,7 +33,7 @@ public class FullCalendarController {
             sw.KpiTList=getAllKpiTargetRecList;
             sw.visitRecList=getAllvisitRecordList;
             system.debug('----------sw--'+sw);
-
+            
             sw.weeklyWrapper = getWeeklyKPI(MBPid);
         }
         else{
@@ -56,7 +56,7 @@ public class FullCalendarController {
         Public List<KPI_Target__c> KpiTList {get; set;}
         @AuraEnabled
         public List<Visit__c> visitRecList {get;set;}
-
+        
         @AuraEnabled
         public List<WeeklyKPIWrapper> weeklyWrapper {get;set;}
         //@AuraEnabled
@@ -85,84 +85,98 @@ public class FullCalendarController {
                     Weeklykpi.put(visitRec.KPI_Target_Name__c,tempCount+1);
                 }else{
                     if(visitRec.KPI_Target_Name__c != null)
-                    Weeklykpi.put(visitRec.KPI_Target_Name__c,1);
+                        Weeklykpi.put(visitRec.KPI_Target_Name__c,1);
                 }
             }
             this.kpi = Weeklykpi;
         }
     }
     
-
+    
     public static List<WeeklyKPIWrapper> getWeeklyKPI(String monthId){
-
+        
         Map<String,Map<String,Integer>> weeklyKPICountMap = new Map<String,Map<String,Integer>>();
-
-        Map<Id,Weekly_Beat_Plan__c> weeklyBeatPlanMap = new Map<Id,Weekly_Beat_Plan__c>([Select Id,Week_Number__c,Start_Day_of_Week__c,End_Day_of_Week__c From Weekly_Beat_Plan__c Where Monthly_Beat_Plan__c =: monthId]);
-
+        
+        Map<Id,Weekly_Beat_Plan__c> weeklyBeatPlanMap = new Map<Id,Weekly_Beat_Plan__c>([Select Id,Week_Number__c,Start_Day_of_Week__c,End_Day_of_Week__c,Week_Format__c From Weekly_Beat_Plan__c Where Monthly_Beat_Plan__c =: monthId]);
+        
         List<Visit__c> visits = [Select Id,Weekly_Beat_Plan__c,KPI_Target_Name__c From Visit__c Where Weekly_Beat_Plan__c IN : weeklyBeatPlanMap.keySet()];
-
-
+        Map<String,String> weekIdByWeekStartAndEnd = new Map<String,String>();
+        
         for(Visit__c visit : visits){
             Weekly_Beat_Plan__c wB = weeklyBeatPlanMap.get(visit.Weekly_Beat_Plan__c);
-
-            String weekId = wB.Week_Number__c<>NULL?wB.Week_Number__c:'Week - ' + '(' +formatDate(wB.Start_Day_of_Week__c) + ' - ' +  formatDate(wB.End_Day_of_Week__c) + ')';
-
-            if(weeklyKPICountMap.containsKey(weekId)){
+            String weekId = wB.Week_Number__c;
+            //String weekId = wB.Week_Number__c<>NULL?wB.Week_Number__c:'Week - ' + '(' +formatDate(wB.Start_Day_of_Week__c) + ' - ' +  formatDate(wB.End_Day_of_Week__c) + ')';
+            //String weekId = wB.Week_Format__c;
+      	     if(weeklyKPICountMap.containsKey(weekId)){
                 Map<String,Integer> kPIMap = weeklyKPICountMap.get(weekId);
-
+                
                 kPIMap.put(visit.KPI_Target_Name__c,kPIMap.containsKey(visit.KPI_Target_Name__c)?kPIMap.get(visit.KPI_Target_Name__c)+1:1);
-
+                
                 weeklyKPICountMap.put(weekId,kPIMap);
             }else{
                 Map<String,Integer> kPIMap = new Map<String,Integer>();
                 kPIMap.put(visit.KPI_Target_Name__c,1);
                 weeklyKPICountMap.put(weekId,kPIMap);
             }
+            if(weekIdByWeekStartAndEnd.containsKey(weekId)){
+                //
+            }else{
+                weekIdByWeekStartAndEnd.put(weekId,wB.Week_Format__c);
+            }
+            
+                
         }
-
+        
         List<WeeklyKPIWrapper> weeklyWappers = new List<WeeklyKPIWrapper>();
-
+        
         for(String weekKey : weeklyKPICountMap.keySet()){
             WeeklyKPIWrapper weeklyWrapper           = new WeeklyKPIWrapper();
             List<KPICountWrapper> kPICounterWrappers = new List<KPICountWrapper>();
-
+            
             weeklyWrapper.weekName = weekKey;
-
+            weeklyWrapper.weekstartAndEndText=weekIdByWeekStartAndEnd.get(weekKey);
+            
             Map<String,Integer> kPICountMap = weeklyKPICountMap.get(weekKey);
-
+            
             for(String kPIKey : kPICountMap.keySet()){
                 KPICountWrapper kPICountWrapper = new KPICountWrapper();
                 kPICountWrapper.kPIName = kPIKey;
                 kPICountWrapper.count = kPICountMap.get(kPIKey);
                 kPICounterWrappers.add(kPICountWrapper);
             }
-
+            
             weeklyWrapper.kpiList = kPICounterWrappers;
             weeklyWappers.add(weeklyWrapper);
         }
-
+        system.debug('weeklyWappers'+weeklyWappers);
         return weeklyWappers;
     }
-
-
+    
+    
     public static String formatDate(Date rDate){
-
+        
         Integer d  = rDate.day();
         Integer mo = rDate.month();
         Integer yr = rDate.year();
-
+        
         DateTime dt = DateTime.newInstance(yr, mo, d);
-
+        
         return dt.format('d MMM');
     }
-
+    
     public class WeeklyKPIWrapper{
-        String weekName;
-        List<KPICountWrapper> kpiList;
+        @AuraEnabled
+        public String weekstartAndEndText;
+       @AuraEnabled
+       Public  String weekName;
+        @AuraEnabled
+        Public  List<KPICountWrapper> kpiList;
     }
-
+    
     public class KPICountWrapper{
-        String kPIName;
-        Integer count;
+        @AuraEnabled
+        Public   String kPIName  {get; set;}
+        @AuraEnabled
+        Public   Integer count  {get; set;}
     }
 }

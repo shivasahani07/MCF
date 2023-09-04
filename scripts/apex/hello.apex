@@ -8,3 +8,6 @@
 string tempvar = 'Enter_your_name_here';
 System.debug('Hello World!');
 System.debug('My name is ' + tempvar);
+
+Visit__c vs = new Visit__c();
+System.debug('RESULT---'+vs==null);

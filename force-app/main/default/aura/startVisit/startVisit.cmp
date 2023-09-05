@@ -2,6 +2,7 @@
     <aura:attribute name="atr1" type="string" />
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:attribute name="accountId" type="String"/>
+    <aura:attribute name="spinner" type="boolean" default="false"/>
     
     <aura:attribute name="showCreateTask" type="boolean" default="false"/>
     <aura:attribute name="showCreateCallLogTask" type="boolean" default="false"/>
@@ -26,6 +27,7 @@
     <aura:attribute name="relOppList" type="List" />
     <aura:attribute name="relInvoicesList" type="List" />
     <aura:attribute name="relCaseList" type="List" />
+    <aura:attribute name="relActivityList" type="List" />
      <aura:attribute name="currentLatitude" type="String"/>
     <aura:attribute name="currentLongitude" type="String"/>
 
@@ -38,7 +40,17 @@
     </aura:html>
     
     
-    
+    <!--loading spinner start-->
+    <aura:if isTrue="{!v.spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading...</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- Loading spinner end-->   
         <lightning:Layout multipleRows="true">
             <!--div style="margin-top:1%"-->
             <lightning:LayoutItem padding="horizontal-small" size="8" class="headerStartVisitPage">
@@ -127,10 +139,68 @@
                     <lightning:LayoutItem size="12" class="">
                         <lightning:tabset>
                             <lightning:tab label="Activity">
-                                One Content !
-                            </lightning:tab>
-                            <lightning:tab label="Emails" title="2nd tab extended title">
-                                Two Content !
+                                <div class="slds-m-around--xx-small slds-scrollable">
+                                    <div class="container-fluid">
+                                        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                                            <thead>
+                                                <tr class="slds-text-title_caps" >
+                                                    <th scope="col" title="sNo" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">S No.</div>
+                                                    </th>
+                                                    <th scope="col" title="Due Date" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Due Date</div>
+                                                    </th>
+                                                    <th scope="col" title="Priority" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Priority</div>
+                                                    </th>
+                                                    <th scope="col" title="Status" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Status</div>
+                                                    </th>
+                                                    <th scope="col" title="Subject" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Subject</div>
+                                                    </th>
+                                                    <th scope="col" title="Type" style="background-color:#6CA1E9;">
+                                                        <div class="slds-truncate">Type</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <aura:iteration items="{!v.relActivityList}" var="pastVisitRec" indexVar="index">
+                                                    <tr>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <h2>{!index+1}</h2>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!pastVisitRec.ActivityDate}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!pastVisitRec.Priority}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!pastVisitRec.Status}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!pastVisitRec.Subject}
+                                                            </div>
+                                                        </td>
+                                                        <td style="background-color:#F5F5F5;">
+                                                            <div>
+                                                                {!pastVisitRec.Type}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </aura:iteration>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </lightning:tab>
                             <lightning:tab label="Past Visits">
                                 <div class="slds-m-around--xx-small slds-scrollable">
@@ -244,7 +314,7 @@
                                                             <h2>{!index+1}</h2>
                                                         </td>
                                                         <td style="background-color:#F5F5F5;">
-                                                            <div>
+                                                            <div data-id="{!val.Id}" onclick="{!c.handleOppClick}" style="cursor:pointer;">
                                                                 {!val.Name}
                                                             </div>
                                                         </td>

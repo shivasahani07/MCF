@@ -30,6 +30,10 @@
         //var SelectedMonth=component.get("v.selectedMonthNumber");*/
         var startDate=component.get("v.StartDatevalue");
         var EndDate=component.get("v.EndDatevalue");
+
+        let Month=component.get("v.selectedMonth");
+        let Year=component.get("v.selectedYear");
+        
         console.log('ROLE KPI---'+JSON.stringify(component.get("v.RoleAndKPIList")));
         console.log('startDate---'+JSON.stringify(startDate));
         console.log('EndDate---'+JSON.stringify(EndDate));
@@ -45,9 +49,14 @@
             var state = response.getState();
             if(state == 'SUCCESS') {
                 component.set("v.ShowToCreateBeatPlanne",false);
-                var cmpEvent = component.getEvent("openParent"); 
-               
-                cmpEvent.fire(); 
+                var cmpEvent = component.getEvent("sampleCmpEvent");
+                debugger;
+                //Set event attribute value
+                cmpEvent.setParams({
+                    "Month" : Month,
+                    "Year":Year
+                }); 
+                cmpEvent.fire();
             }else{
                 component.set("v.ShowToCreateBeatPlanne",false);
             }

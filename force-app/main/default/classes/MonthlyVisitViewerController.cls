@@ -156,7 +156,7 @@ global class MonthlyVisitViewerController {
             if(!String.isBlank(routeName)) {
                 String query = '%' +routeName +'%';
                 System.debug('query ===> '+query);
-                pageData.put('accountList', [SELECT Id,Name,BillingStreet,Geo_Location__latitude__s,Geo_Location__longitude__s FROM Account WHERE BillingStreet LIKE : query]);
+                pageData.put('accountList', [SELECT Id,Name,BillingStreet,Geo_Location__latitude__s,Geo_Location__longitude__s FROM Account WHERE BillingStreet LIKE : query LIMIT 10]);
                 pageData.put('leadList', [Select Id, Name,Street FROM Lead WHERE Street LIKE : query ]);
                 System.debug('User Data ::'+pageData);
                 return pageData;
@@ -249,9 +249,7 @@ global class MonthlyVisitViewerController {
                 system.debug('WBPRec--'+WBPRec);
             }
         }
-
         Visit__c vs = new Visit__c();
-
         if(sObjName == 'Lead'){
             vs.Lead__c = SobjectId;
             vs.Assigned_User__c = UserInfo.getUserId();

@@ -5,7 +5,11 @@
     <aura:attribute name="EndDatevalue" type="Date" />
     <aura:attribute name="selectedMonthNumber" type="Integer" />
     <aura:attribute name="RoleAndKPIList" type="List" />
-    <aura:registerEvent name="openParent" type="c:SampleComponentEvent" />
+
+    <aura:attribute name="selectedMonth" type="String" />
+    <aura:attribute name="selectedYear" type="String" />
+    
+    <aura:registerEvent name="sampleCmpEvent" type="c:SampleComponentEvent"/>
 
     <lightning:layoutItem class="e" size="12" padding="around-large" >
         <div class="slds-grid   NameBar slds-m-horizontal_medium " >

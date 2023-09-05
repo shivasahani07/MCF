@@ -6,10 +6,10 @@
         var userLocation = navigator.geolocation;
         if (userLocation) {
             userLocation.getCurrentPosition(function (position) {
-               // lat = position.coords.latitude;
-               // long = position.coords.longitude;
-                 component.set("v.currentLatitude",position.coords.latitude);
-                 component.set("v.currentLongitude",position.coords.longitude);
+                // lat = position.coords.latitude;
+                // long = position.coords.longitude;
+                component.set("v.currentLatitude",position.coords.latitude);
+                component.set("v.currentLongitude",position.coords.longitude);
             });
         } 
         
@@ -19,6 +19,15 @@
         helper.getAccRelatedOppList(component, event, helper);
         helper.getRelatedInvoiceList(component, event, helper);
         helper.getRelatedCaseList(component, event, helper);
+        helper.getRelatedActivityList(component, event, helper);
+    },
+    
+    handleOppClick: function(component, event, helper){
+        debugger;
+        var url = $A.get("$Label.c.orgDefaultURL");
+        var oppId = event.target.dataset.id; 
+        var oppUrl = url + oppId;
+        window.open(oppUrl, '_blank');
     },
     
     
@@ -80,6 +89,7 @@
     },
     saveTaskHandler : function(component, event, helper) {
         debugger;
+        component.set('v.spinner', true);
         component.set("v.showCreateTask",false);
         var taskRecord = component.get('v.taskRec');
         var accId = component.get('v.accID');
@@ -90,16 +100,23 @@
         });
         action.setCallback(this, function(response){
             if(response.getState() ==='SUCCESS'){
-                alert('record Saved Successfully');
+                component.set('v.spinner', false);
+                //alert('record Saved Successfully');
+                helper.getRelatedActivityList(component, event, helper);
+                helper.showSuccess(component, event, helper);
                 component.set("v.showCreateTask",false);
             }else{
+                component.set('v.spinner', false);
                 alert(JSON.stringify(response.getError()));
             }
+            component.set('v.spinner', false);
         });
         $A.enqueueAction(action);
     },
     saveLogCall : function(component, event, helper) {
         debugger;
+        component.set('v.spinner', true);
+        component.set("v.showCreateCallLogTask",false);
         var today = new Date();
         var formattedDate = today.toISOString().slice(0, 10);
         var taskRecord = component.get('v.callRec');
@@ -114,17 +131,22 @@
         });
         action.setCallback(this, function(response){
             if(response.getState() ==='SUCCESS'){
-                alert('record Saved Successfully');
-                component.set("v.showCreateCallLogTask",false);
+                component.set('v.spinner', false);
+                helper.getRelatedActivityList(component, event, helper);
+                helper.showSuccess(component, event, helper);
+                //alert('record Saved Successfully');
             }else{
                 alert(JSON.stringify(response.getError()));
+                component.set('v.spinner', false);
             }
+            component.set('v.spinner', false);
         });
         $A.enqueueAction(action);
     },
     createOppHandle : function(component, event, helper) {
         debugger;
         component.set("v.showOpportunityCreate",false);
+        component.set('v.spinner', true);
         var oppRecord = component.get('v.oppRec');
         var accId = component.get('v.accID');
         oppRecord.AccountId = accId;
@@ -134,17 +156,22 @@
         });
         action.setCallback(this, function(response){
             if(response.getState() ==='SUCCESS'){
-                alert('record Saved Successfully');
+                component.set('v.spinner', false);
+                //alert('record Saved Successfully');
+                helper.showSuccess(component, event, helper);
                 helper.getAccRelatedOppList(component, event, helper);
                 
             }else{
                 alert(JSON.stringify(response.getError()));
+                component.set('v.spinner', false);
             }
+            component.set('v.spinner', false);
         });
         $A.enqueueAction(action);
     },
     createCaseHandle : function(component, event, helper) {
         debugger;
+        component.set('v.spinner', true);
         var caseRecord = component.get('v.caseRec');
         var accId = component.get('v.accID');
         caseRecord.AccountId = accId;
@@ -155,12 +182,16 @@
         });
         action.setCallback(this, function(response){
             if(response.getState() ==='SUCCESS'){
-                alert('record Saved Successfully');
+                component.set('v.spinner', false);
+                helper.showSuccess(component, event, helper);
+                //alert('record Saved Successfully');
                 helper.getRelatedCaseList(component, event, helper);
             }else{
                 alert(JSON.stringify(response.getError()));
+                component.set('v.spinner', false);
             }
             component.set("v.showCreateCase",false);
+            component.set('v.spinner', false);
         });
         $A.enqueueAction(action);
     },
@@ -175,7 +206,28 @@
                 lat = position.coords.latitude;
                 long = position.coords.longitude;
                 if ((lat != null && lat != undefined && lat != '') && (long != null && long != undefined && long != '')) {
+                    component.set('v.spinner', true);
                     helper.CheckInVisithelper(component,lat, long);
+                    // component.set("v.currentLatitude", lat);
+                    // component.set("v.currentLongitude", long);
+                }
+            });
+        } 
+        
+    },
+    
+    checkOutHandler: function(component, event, helper) {
+        debugger;
+        var lat;
+        var long;
+        var userLocation = navigator.geolocation;
+        if (userLocation) {
+            userLocation.getCurrentPosition(function (position) {
+                lat = position.coords.latitude;
+                long = position.coords.longitude;
+                if ((lat != null && lat != undefined && lat != '') && (long != null && long != undefined && long != '')) {
+                    component.set('v.spinner', true);
+                    helper.CheckOutVisithelper(component,lat, long);
                     // component.set("v.currentLatitude", lat);
                     // component.set("v.currentLongitude", long);
                 }

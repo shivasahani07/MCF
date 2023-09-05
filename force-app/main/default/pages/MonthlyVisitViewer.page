@@ -15,6 +15,7 @@
             <apex:includeScript value="{!URLFOR($Resource.Calendar, '/FullCalendarJS/fullcalendar.min.js')}"/>
             <apex:includeScript value="{!URLFOR($Resource.Calendar, '/FullCalendarJS/jquery.ui.touch-punch.min.js')}"/>
             <apex:includeScript value="{!URLFOR($Resource.MonthlyVisitViewerJS)}"/>
+            <apex:includeScript value="{!URLFOR($Resource.sweetAlert)}"/>
             <style>
                 modal {
                 display: none;

@@ -39,6 +39,7 @@ function initMap() {
     });
     
     function getLocation(markerLocationList){
+        debugger;
      _mapPoints = new Array();
      _polyPoints = new Array();
      var myOptions = {

@@ -54,7 +54,8 @@ public class TodayTaskAuraController {
         Visit__c visitRec = new Visit__c();
         try{
             if(String.isNotBlank(visitId)){
-                visitRec = [SELECT Id, Name, Status__c, Account__c, Duration__c, Account__r.Name, Account__r.Website, Account__r.Email__c, Account__r.Phone,  Visit_Time__c, Planned_visit_date__c, Weekly_Beat_Plan__c, KPI_Target__c, KPI_Target__r.KPI_Target_Name__c,Account__r.BillingStreet, Account__r.BillingCity, Account__r.BillingState,Account__r.BillingPostalCode,Account__r.BillingCountry FROM Visit__c WHERE Id=:visitId LIMIT 1];
+                visitRec = [SELECT Id, Name, Status__c, Account__c, Duration__c, Account__r.Name, Account__r.Website, Account__r.Email__c, Account__r.Phone,  
+                            CheckIn__Latitude__s, Check_Out__Latitude__s, Visit_Time__c, Planned_visit_date__c, Weekly_Beat_Plan__c, KPI_Target__c, KPI_Target__r.KPI_Target_Name__c,Account__r.BillingStreet, Account__r.BillingCity, Account__r.BillingState,Account__r.BillingPostalCode,Account__r.BillingCountry FROM Visit__c WHERE Id=:visitId LIMIT 1];
                 if(visitRec !=null){
                     System.debug('visitRec === >'+visitRec);
                     return visitRec;
@@ -217,11 +218,12 @@ public class TodayTaskAuraController {
     //==========================================================================================================================================================================================================
     // Method for Check in on Visit Record
     @AuraEnabled
-    public static Visit__c  checkInVisitUpdate(String checkInLat,String checkInLang){
-        Visit__c visRec = [SELECT Id,Name,Actual_visit_date__c,CheckIn__Latitude__s,CheckIn__Longitude__s,Visit_Status__c FROM Visit__c WHERE Actual_visit_date__c=TODAY LIMIT 1 ];
+    public static Visit__c  checkInUpdateVisit(String checkInLat,String checkInLang, String recId){
+        System.debug('checkInLat--> ' + checkInLat + 'checkInLang--> '+ checkInLang + 'recId--> '+ recId);
+        Visit__c visRec = [SELECT Id,Name,Actual_visit_date__c,CheckIn__Latitude__s,CheckIn__Longitude__s, Check_Out__Latitude__s, Check_Out__Longitude__s, Visit_Status__c FROM Visit__c WHERE Id=:recId];
+        System.debug('visRec--> ' + visRec);
         try{
-            if(String.isNotBlank(checkInLat) && String.isNotBlank(checkInLang) && String.isNotBlank(visRec.Id)){
-                visRec.Id = visRec.Id;
+            if(String.isNotBlank(checkInLat) && String.isNotBlank(checkInLang)){
                 visRec.CheckIn__Latitude__s = Decimal.valueOf(checkInLat);
                 visRec.CheckIn__Longitude__s =  Decimal.valueOf(checkInLang);
                 visRec.Visit_Status__c = 'In Progress';
@@ -238,10 +240,21 @@ public class TodayTaskAuraController {
 
     //==========================================================================================================================================================================================================
     // Method for Check Out in Visit Record
-    public static Visit__c checkOutVisitUpdate(String checkOutLat,string checkOutLong){
-        Visit__c visRec =[SELECT Id,Name,Actual_visit_date__c,CheckIn__Latitude__s,CheckIn__Longitude__s,Visit_Status__c FROM Visit__c WHERE CheckIn__Latitude__s !=null AND CheckIn__Longitude__s !=null LIMIT 1];
+    @AuraEnabled
+    public static Visit__c checkOutUpdateVisit(String checkOutLat,string checkOutLong, String recId){
+        System.debug('checkOutLat--> ' + checkOutLat + 'checkOutLong--> '+ checkOutLong + 'recId--> '+ recId);
+        Visit__c visRec =[SELECT Id,Name,Actual_visit_date__c,CheckIn__Latitude__s,CheckIn__Longitude__s, Check_Out__Latitude__s, Check_Out__Longitude__s, Visit_Status__c FROM Visit__c WHERE Id=:recId];
+        System.debug('visRec--> ' + visRec);
         try{
-            return null;
+            if(String.isNotBlank(checkOutLat) && String.isNotBlank(checkOutLong)){
+                visRec.Check_Out__Latitude__s = Decimal.valueOf(checkOutLat);
+                visRec.Check_Out__Longitude__s =  Decimal.valueOf(checkOutLong);
+                visRec.Visit_Status__c = 'COMPLETED';
+                visRec.Check_Out_Time__c = System.now();
+                update visRec;
+                System.debug('Check Out Visit Update Record === >'+visRec);
+                return visRec;
+            }
         }catch(Exception e){
             System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
         }
@@ -320,6 +333,24 @@ public class TodayTaskAuraController {
                 if(caseList !=null){
                     System.debug('caseList === >'+caseList);
                     return caseList;
+                }
+            }
+        }catch(Exception e){
+            System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
+        }
+        return null;
+    }
+    
+            @AuraEnabled
+    public static List<Task> getRelTaskList(String accId){
+        List<Task> taskList = new List<Task>();
+        String userId = userInfo.getUserId();
+        try{
+            if(String.isNotBlank(accId)){
+                taskList = [SELECT Id, OwnerId, ActivityDate, Priority, Status, Subject, Type FROM Task WHERE WhatId=:accId AND OwnerId=:userId LIMIT 10];
+                if(taskList !=null){
+                    System.debug('taskList === >'+taskList);
+                    return taskList;
                 }
             }
         }catch(Exception e){

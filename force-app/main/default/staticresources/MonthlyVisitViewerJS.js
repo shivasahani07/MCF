@@ -215,8 +215,20 @@ $(document).ready(function () {
                 //     positionClass: "toast-top-right"
                 // });
                 // alert("VISIT Created Successfully !")
+                swal ({
+                    title: "Good job!",
+                    text:'Visit Created Successfully!' ,  
+                    icon:'success',
+                    button:'Ok'
+                 })
             }else{
-                alert('Error to create visit')
+                //alert('Error to create visit');
+                swal ({
+                    title:"Oops" ,  
+                    text:"Something went wrong!" ,  
+                    icon:"error",
+                    button:'Ok'
+                })
             }
         }, { escape: false });
     }

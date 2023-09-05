@@ -75,12 +75,23 @@
                     component.set("v.mbpName",wrappdata.MBPlist.Name);
                     component.set("v.month",wrappdata.MBPlist.Month_Name__c);
                     component.set("v.mbpStatus",wrappdata.MBPlist.Status__c);
-                    
-                    for (let i = 0; i < wrappdata.Weeks.length; i++) {
-                        	
-                            // Append each visit to the visitList array
-                        
+                    var tempKPIList=wrappdata.weeklyWrapper;
+                    for(let j=0;j<wrappdata.weeklyWrapper.length;j++){
+                             let TempArray=wrappdata.weeklyWrapper[j].kpiList;
+                            for (let i = 0; i <TempArray.length; i++) {
+                            if (i % 2 === 0) {
+                                TempArray[i].dynamicClass='slds-badge slds-theme_success';
+                                console.log(i + " is even");
+                            } else {
+                                TempArray[i].dynamicClass='slds-badge slds-theme_warning';
+                                console.log(i + " is odd");
+                            }
+                              
+                        }
+                          console.log('TempArray---'+JSON.stringify(TempArray));
+                           wrappdata.weeklyWrapper[j].kpiList=TempArray;
                     }
+                     console.log('wrappdata.weeklyWrappe---'+JSON.stringify(wrappdata.weeklyWrapper));
                     console.log('visitList---',visitList);
                     component.set("v.Visits",visitList);
                     if(wrappdata.MBPlist.Status__c=='Approved'){
@@ -155,5 +166,5 @@
         });
         
         $A.enqueueAction(action);
-    },
+    }
 })

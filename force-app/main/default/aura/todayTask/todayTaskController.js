@@ -1,7 +1,9 @@
 ({
     doInit: function (component, event, helper) {
         debugger;
+        
         helper.getVisitRecs(component, event, helper); 
+        helper.callMapMethod(component, event, helper); 
         var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         var today = new Date;
         
@@ -46,17 +48,20 @@
     handleComponentEvent : function (component, event, helper) {
         debugger;
         //alert('fired!');
-      var showStartVisitComponent = event.getParam("showStartVisitComponent"); 
+        var showStartVisitComponent = event.getParam("showStartVisitComponent"); 
         var showTodaysTaskComponent = event.getParam("showTodaysTaskComponent");
         component.set('v.showTodaysTaskComponent', showTodaysTaskComponent);
         component.set('v.showStartVisitComponent', showStartVisitComponent);
-
+        
     },
     
     handleDateSelect: function (component, event, helper) {
         debugger;
         const selectedDate = event.currentTarget.dataset.date;
         component.set("v.selectedDate", selectedDate);
+        component.set("v.SelectedVisitDate", selectedDate);
+        var dateToPass = selectedDate;
+        helper.callMapMethodFromController(component, dateToPass, helper); 
         if(selectedDate != null && selectedDate != undefined){
             var dateNew = new Date();
             if(selectedDate != dateNew.toISOString().slice(0, 10)){
@@ -101,7 +106,7 @@
     },
     handleStartVisit: function (component, event, helper) {
         debugger;
-       // helper.getVisitData(component, event, helper);
+        // helper.getVisitData(component, event, helper);
         var record = event.getSource().get('v.value');
         var recordId = record.Account__c;
         component.set('v.visitIDtoStart', record.Id);

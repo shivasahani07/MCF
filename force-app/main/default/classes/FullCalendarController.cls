@@ -94,14 +94,14 @@ public class FullCalendarController {
     
     
     public static List<WeeklyKPIWrapper> getWeeklyKPI(String monthId){
-        
+        system.debug('monthId---'+monthId);
         Map<String,Map<String,Integer>> weeklyKPICountMap = new Map<String,Map<String,Integer>>();
-        
+      
         Map<Id,Weekly_Beat_Plan__c> weeklyBeatPlanMap = new Map<Id,Weekly_Beat_Plan__c>([Select Id,Week_Number__c,Start_Day_of_Week__c,End_Day_of_Week__c,Week_Format__c From Weekly_Beat_Plan__c Where Monthly_Beat_Plan__c =: monthId]);
-        
+       system.debug('weeklyBeatPlanMap---'+weeklyBeatPlanMap);
         List<Visit__c> visits = [Select Id,Weekly_Beat_Plan__c,KPI_Target_Name__c From Visit__c Where Weekly_Beat_Plan__c IN : weeklyBeatPlanMap.keySet()];
         Map<String,String> weekIdByWeekStartAndEnd = new Map<String,String>();
-        
+        system.debug('visits---'+visits);
         for(Visit__c visit : visits){
             Weekly_Beat_Plan__c wB = weeklyBeatPlanMap.get(visit.Weekly_Beat_Plan__c);
             String weekId = wB.Week_Number__c;

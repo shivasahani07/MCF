@@ -1,0 +1,40 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+    
+    <aura:attribute name="OppoetunityId" type="Id" />
+    
+    <lightning:button variant="brand" label="Create Opportunity" title="Brand action" onclick="{! c.handleClick }" />
+    <lightning:button variant="brand" label="Brand" title="Brand action" onclick="{! c.handleClick }" />
+    <lightning:button variant="brand" label="Brand" title="Brand action" onclick="{! c.handleClick }" />
+    
+    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+        <!--lightning:input type="text"  label="{!item}" aura:id="{!item}" value="{myObject"/-->
+        <lightning:recordEditForm recordId="{!v.OppoetunityId}" objectApiName="Opportunity" onsuccess="{!c.handleUpdate}">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning:outputField fieldName="Name" />
+                    <lightning:inputField fieldName="AccountId" />
+                    <lightning:inputField fieldName="Delivery_Plant__c" />
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    
+                    <lightning:inputField fieldName="StageName" />
+                    <lightning:inputField fieldName="LeadSource" />
+                    <lightning:inputField fieldName="Client_Note__c" />
+                </div>
+                
+            </div>
+            <div class="slds-border_top slds-align_absolute-center" slot="footer">
+                <lightning:button class="slds-m-top_small" variant="brand" type="submit" name="update" label="Update"/> &nbsp;
+                <lightning:button class="slds-m-top_small" variant="neutral"
+                                  label="Cancel"
+                                  title="Cancel"
+                                  onclick="{!c.closeModelCreateContact }"/>
+            </div>
+        </lightning:recordEditForm>
+    </div>
+    
+    <!--Navigate to opportunity creation page-->
+    <lightning:navigation aura:id="navService"/>
+    <lightning:button name="Create Opportunity" label="Navigate to Account list view" onclick="{!c.navigate}"/>
+    
+</aura:component>

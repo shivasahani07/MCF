@@ -1,0 +1,23 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="videoLinkList" type="List"/>
+    <div class="slds-grid slds-wrap">
+    <div class="slds-size_1-of-3" style="border:solid 1px gray;max-width: fit-content;    box-shadow: 0px 0px 5px;    margin: 3vh; ">
+    <iframe width="380" height="215" src="https://www.youtube.com/embed/rjaMox0tU-E?si=o9CgvBnLEmNNzoiu" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen = "true"></iframe>
+    </div>
+    <div class="slds-size_1-of-3" style="border:solid 1px gray;max-width: fit-content;    box-shadow: 0px 0px 5px;    margin: 3vh; ">
+    <iframe width="380" height="215" src="https://www.youtube.com/embed/y6fG-aIP_PU?si=OqL1tnzh01Qo0hHd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen ="true"></iframe>
+	</div>
+    <div class="slds-size_1-of-3" style="border:solid 1px gray;max-width: fit-content;    box-shadow: 0px 0px 5px;    margin: 3vh;">
+    <iframe width="380" height="215" src="https://www.youtube.com/embed/Bw-Ej7MaBh4?si=nnpuxmg0ueDnp-JS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen ="true"></iframe>
+    </div>
+        <div class="slds-size_1-of-3" style="border:solid 1px gray;max-width: fit-content;    box-shadow: 0px 0px 5px;    margin: 3vh;">
+            <iframe width="380" height="215" src="https://www.youtube.com/embed/bNBQKlHt6rg?si=oFn6W8eWzeFNpxva" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen = "true"></iframe>
+        </div>
+        <div class="slds-size_1-of-3" style="border:solid 1px gray;max-width: fit-content;    box-shadow: 0px 0px 5px;    margin: 3vh;">
+            <iframe width="380" height="215" src="https://www.youtube.com/embed/D8CAab815CM?si=BIItM3lj10cQmdpK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen = "true"></iframe>
+        </div>
+        <div class="slds-size_1-of-3" style="border:solid 1px gray;max-width: fit-content;    box-shadow: 0px 0px 5px;    margin: 3vh;">
+            <iframe width="380" height="215" src="https://www.youtube.com/embed/qSWm_nprfqE?si=TIOl2h7NlAmutdEl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen = "true"></iframe>
+        </div>
+    </div>
+</aura:component>

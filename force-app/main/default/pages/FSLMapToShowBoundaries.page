@@ -1,0 +1,121 @@
+<apex:page showHeader="false" standardStylesheets="false">
+  <html>
+  <head>
+    <title>City Boundaries</title>
+    <style>
+      #map-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+  }
+
+  #map {
+    width: 100%;
+    height: 100%;
+  }
+
+  #info-card {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px silver;
+  }
+
+  #info-card h3 {
+    color: #3298f0;
+  }
+        
+         #info-card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  #info-card li::before {
+    display: inline-block;
+    content: ' ';
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    border: 1px solid #000;
+    
+  }
+
+  #info-card li:nth-child(1)::before {
+    background-color: #6c55ff;
+  }
+
+  #info-card li:nth-child(2)::before {
+    background-color: #ff6242;
+
+    </style>
+  </head>
+  <body>
+    <div id="map-container">
+      <div id="map"></div>
+      <div id="info-card">
+        <h3>Area Assigned to You</h3>
+        <ul>
+          <li>Delhi</li>
+          <li>Faridabad</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Google Maps API script with your API key -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAki1KNhw8H36mkjnT_BBsJyX-dsV3hmnA&callback=initMap" async="true" defer="true"></script>
+
+    <script>
+      function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 10, // Adjust the initial zoom level as needed
+          center: { lat: 28.6139, lng: 77.2090 } // Default center for Delhi
+        });
+
+        // Create a new Data layer for Faridabad
+        const faridabadLayer = new google.maps.Data();
+        faridabadLayer.setStyle({
+          fillColor: "#ff6242",
+          fillOpacity: 0.5,
+          strokeWeight: 2,
+          strokeColor: "#ff6242"
+        });
+        faridabadLayer.setMap(map);
+
+        // Load and add Faridabad GeoJSON data
+        fetch('{!$Resource.FaridabadGeoJson}')
+          .then((response) => response.json())
+          .then((data) => {
+            faridabadLayer.addGeoJson(data);
+          })
+          .catch((error) => {
+            console.error('Failed to load Faridabad GeoJSON data: ' + error.message);
+          });
+
+        // Create a new Data layer for Gurugram
+        const gurugramLayer = new google.maps.Data();
+        gurugramLayer.setStyle({
+          fillColor: "#6c55ff",
+          fillOpacity: 0.5,
+          strokeWeight: 2,
+          strokeColor: "#6c55ff"
+        });
+        gurugramLayer.setMap(map);
+
+        // Load and add Gurugram GeoJSON data
+        fetch('{!$Resource.DelhiGeoJson}')
+          .then((response) => response.json())
+          .then((data) => {
+            gurugramLayer.addGeoJson(data);
+          })
+          .catch((error) => {
+            console.error('Failed to load Gurugram GeoJSON data: ' + error.message);
+          });
+      }
+    </script>
+  </body>
+  </html>
+</apex:page>

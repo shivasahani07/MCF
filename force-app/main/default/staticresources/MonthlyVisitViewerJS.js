@@ -15,6 +15,7 @@ $(document).ready(function () {
     let Leadgeolongitude;
     let AccountLatitude;
     let AccountLongitude;
+    let accMap = new Map();
     let configureCalendar = function () {
         debugger;
         
@@ -23,7 +24,7 @@ $(document).ready(function () {
 	
     }
    
-    let accMap = new Map();
+   
 
     
     
@@ -118,24 +119,25 @@ $(document).ready(function () {
                 dayClick: function (date, jsEvent, view) {
                     jsEvent.preventDefault();
                 },
-                drop: function (date) {
+                drop: function (date ,jsEvent) {
                     visiteDateToApex = date;
-                    
+                   
                     console.log('repVisits.length::'+repVisits.length);
                     debugger;
-                    repVisits.push({ id: $(this).attr("data-accid"), start: date._i });
-                    
+                    repVisits.push({ id: $(this).attr("data-accid"), start: date._i });                    
+                    //handleAddressSelection(date, this);
                     for (var i = 0; i < repVisits.length; i++) {
                        
                         if(repVisits[i].id==currentAccount && repVisits[i].start==apexDate){
                             alert('there is already visit for this account');
+                            handleAddressSelection(date, this);
                         }else{
                             currentAccount = repVisits[i].id;
-                            // handleAddressSelection(date, this);
+                            handleAddressSelection(date, this);
                         }
                     }
                     
-                    callGeolocationMethod();
+                   
                     if ($('#drop-remove').is(':checked')) {
                         $(this).remove();
                     }
@@ -233,8 +235,9 @@ $(document).ready(function () {
                     title: "Good job!",
                     text:'Visit Created Successfully!' ,  
                     icon:'success',
-                    button:'ok',
-                    confirmButtonText: "ok"
+                    button:'Ok',
+                    //showCancelButton: true,
+                    confirmButtonText: "OK"
                  })
                 window.location.reload();
             }else{
@@ -243,7 +246,8 @@ $(document).ready(function () {
                     title:"Oops" ,  
                     text:"Something went wrong!" ,  
                     icon:"error",
-                    button:'ok'
+                    button:'Ok',
+                   // showCancelButton: true
                 })
             }
         }, { escape: false });
@@ -497,6 +501,7 @@ $(document).ready(function () {
                         let calVisit = {};
                         calVisit.id = result.accountList[i].Id;
                         calVisit.title = result.accountList[i].Name;
+                        accMap.set(result.accountList[i].Id, result.accountList[i]);
                         //  calVisit.start = result.accountList[i].Planned_visit_date__c;
                         //  calVisit.end = result.accountList[i].Planned_visit_date__c;
                         repVisits.push(calVisit);
@@ -504,6 +509,7 @@ $(document).ready(function () {
                     console.log(repVisits);
                     
                     $(result.accountList).each(function (i, e) {
+                       
                         $("#event-container").append(
                             '<div class="fc-event" data-accid="' + result.accountList[i].Id + '">' + result.accountList[i].Name + '</div>'
                         );
@@ -631,7 +637,11 @@ $(document).ready(function () {
         tagKPIToVisit();
     });
 
-    let selectedDate, selectedInstance;
+    $(".close-modal").click(function() {
+        $("#address-modal").hide();
+    });
+
+let selectedDate, selectedInstance;
 let addressMap;
 function handleAddressSelection(date, instance) {
     debugger;
@@ -652,13 +662,14 @@ function handleAddressSelection(date, instance) {
             addressMap.set('777', {city: account.BillingCity, country: account.BillingCountry, lat: account.BillingLatitude, long: account.BillingLongitude, pCode: account.BillingPostalCode, state: account.BillingState, street: account.BillingStreet});
             $("#address-parent").append('<span class="slds-radio"><input type="radio" id="777" value="777" name="address-radio" checked="" /><label class="slds-radio__label" for="777"><span class="slds-radio_faux"></span><span class="slds-form-element__label">'+'<b>City: </b>'+ account.BillingCity+', <b>Country:</b> '+account.BillingCountry+', <b>Pin-Code: </b>'+ account.BillingPostalCode+', <b>State:</b> '+account.BillingState+', <b>Street: </b> '+account.BillingStreet+'</span></label></span>');
         }
-        if(account && account.Dispatch_Address__r) {
-            for(let i = 0; i < account.Dispatch_Address__r.length; i++) {
-                addressMap.set(i+"", {city: account.Dispatch_Address__r[i].City__c, country: account.Dispatch_Address__r[i].Country__c, lat: account.Dispatch_Address__r[i].Geo_Location__latitude__s, long: account.Dispatch_Address__r[i].Geo_Location__longitude__s, pCode: account.Dispatch_Address__r[i].Postal_Code__c, state: account.Dispatch_Address__r[i].State__c, street: account.Dispatch_Address__r[i].Street__c});
-                $("#address-parent").append('<span class="slds-radio"><input type="radio" id="'+i+'" value="'+i+'" name="address-radio" checked="" /><label class="slds-radio__label" for="'+i+'"><span class="slds-radio_faux"></span><span class="slds-form-element__label">'+'<b>City: </b>'+ account.Dispatch_Address__r[i].City__c+', <b>Country:</b> '+account.Dispatch_Address__r[i].Country__c+', <b>Pin-Code: </b>'+ account.Dispatch_Address__r[i].Postal_Code__c+', <b>State:</b> '+account.Dispatch_Address__r[i].State__c+', <b>Street: </b> '+account.Dispatch_Address__r[i].Street__c+'</span></label></span>');
+        if(account && account.Customer_Address__r) {
+            for(let i = 0; i < account.Customer_Address__r.length; i++) {
+                addressMap.set(i+"", {city: account.Customer_Address__r[i].Address__City__s, country: account.Customer_Address__r[i].Address__CountryCode__s, lat: account.Customer_Address__r[i].Geo_Location__latitude__s, long: account.Customer_Address__r[i].Geo_Location__c, pCode: account.Customer_Address__r[i].Address__PostalCode__s, state: account.Customer_Address__r[i].Address__StateCode__s, street: account.Customer_Address__r[i].Address__Street__s});
+                $("#address-parent").append('<span class="slds-radio"><input type="radio" id="'+i+'" value="'+i+'" name="address-radio" checked="" /><label class="slds-radio__label" for="'+i+'"><span class="slds-radio_faux"></span><span class="slds-form-element__label">'+'<b>City: </b>'+ account.Customer_Address__r[i].Address__City__s+', <b>Country:</b> '+account.Customer_Address__r[i].Address__CountryCode__s+', <b>Pin-Code: </b>'+ account.Customer_Address__r[i].Address__PostalCode__s+', <b>State:</b> '+account.Customer_Address__r[i].State__c+', <b>Street: </b> '+account.Customer_Address__r[i].Street__c+'</span></label></span>');
             }
         }
     }
+   
     $("#address-modal").show();
 }
 

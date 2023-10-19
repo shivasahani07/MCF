@@ -109,7 +109,7 @@
                                                     <div style="padding: 2%; display: inline-block;">
                                                         <h1 style="font-size: 16px; font-weight: 620; margin: 0; max-width: 300px; word-wrap: break-word;">{!val.Account__r.Name}</h1>
                                                     </div>                                                    
-                                                    <div style="position: absolute; right:40px;">
+                                                    <div style="position: absolute; right:4%;">
                                                         <aura:if isTrue="{!val.Visit_Status__c == 'Assigned'}">
                                                             <div style="padding: 3px; width: 125%; background: #6CA1E9; border-radius: 12px; color: white; text-align: center;"> Assigned </div>
                                                         </aura:if>
@@ -129,7 +129,7 @@
                                                 <div style=" margin-top: -2%; margin-left:3%">
                                                     <div style=" padding-left: 12%; justify-content: flex-start; align-items: center; gap: 4px;  color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">Beat Id:</div>
                                                     <div style=" padding: 1%; justify-content: flex-start; color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">{!val.Name}</div>
-                                                    <div style=" padding-left: 24%; justify-content: flex-start; align-items: center; gap: 4px;  color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">Beat Type:</div>
+                                                    <div style=" position: absolute; right:34%;  justify-content: flex-start; align-items: center; gap: 4px;  color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">Beat Type:</div>
                                                     <div style=" padding: 1%; justify-content: flex-start; color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">{!val.KPI_Target__r.KPI_Target_Name__c}</div>
                                                 </div>
                                                 <div style="margin-left: 3%">
@@ -144,7 +144,7 @@
                                                             </div>
                                                         </aura:set>
                                                     </aura:if> 
-                                                    <div style="position: absolute; right:36%; justify-content: flex-start; align-items: center; gap: 4px;  color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">Duration:</div>        
+                                                    <div style="position: absolute; right:34%; justify-content: flex-start; align-items: center; gap: 4px;  color: black; font-size: 12px; font-family: Lato; font-weight: 600; word-wrap: break-word; display: inline-block;">Duration:</div>        
                                                     <div style=" padding: 1%; justify-content: flex-start; color: #7D7D7D; font-size: 12px; font-family: Lato; font-weight: 400; word-wrap: break-word; display: inline-block;">{!val.Duration__c}</div>
                                                 </div>
                                                 <div style=" padding-left: 14%; padding-bottom:2%;padding-top: 2%;">

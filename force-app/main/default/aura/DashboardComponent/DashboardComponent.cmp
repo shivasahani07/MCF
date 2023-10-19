@@ -77,19 +77,9 @@
                     </lightning:layout>
                 </div>
             </lightning:layoutItem>
-            <img src="{!$Resource.DashboardImage}">
-
-        </img>
+       
         </lightning:layout>
-        <img src="{!$Resource.DashboardImage}">
-
-        </img>
-    </div>
-
-    <div>
-        <img src="{!$Resource.DashboardImage}">
-
-        </img>
+     
     </div>
     
 </aura:component>

@@ -29,7 +29,7 @@
                 
                 if(customFileType != 'application/pdf'){
                     component.set("v.isPDF",false);
-                    alert('Please upload PDF only.');
+                    //alert('Please upload PDF only.');
                     return;
                 }    
             }   

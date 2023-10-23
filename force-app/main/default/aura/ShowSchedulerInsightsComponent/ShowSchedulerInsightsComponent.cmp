@@ -6,6 +6,7 @@
     <aura:attribute name="selectedYear" type="String" />
     <aura:attribute name="MonthlyBeatPlanDataList" type="sObject" default="{sObjecttype:'Monthly_Beat_Plan__c'}"/>  
     <aura:attribute name="userName" type="String" />
+    <aura:attribute name="refresh" type="Boolean" default="true"/>
     
     <div class="DashboardScheduler" >
         <div class="slds-align_absolute-center">
@@ -18,9 +19,11 @@
             <div class="monthMargin">
                 <c:SchedulerInsightsProgressRing selectedMonth="{!v.selectedMonth}" selectedYear="{!v.selectedYear}"/>
             </div>
+            <aura:if isTrue = "{!v.refresh}">
             <div class="tableMargin">
-                <c:SchedulerInsightsDataTable/>
+                <c:SchedulerInsightsDataTable monthName = "{!v.selectedMonth}" monthYear = "{!v.selectedYear}"/>
             </div>
+            </aura:if>
         </aura:if>
         <aura:if isTrue="{!v.ShowToCreateMonthlyBeatPlan}">
             <div class="noBeat" style="margin-top:1%; margin-left:1.5%; margin-right:1%">

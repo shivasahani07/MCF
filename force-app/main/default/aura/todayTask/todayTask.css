@@ -17,6 +17,28 @@
         margin-bottom: -13%;
     }
 
+    .THIS .heading {
+        background-color: rgba(0, 112, 210, 0.9);
+    }
+    
+    /* .THIS .table-header-blur::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        backdrop-filter: blur(10px);
+    } */
+
+    .THIS .tableCard {
+        width: 98%;
+        align-self: center;
+        margin-left: 1%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
     .THIS .beat_id {
         margin-left: 4%;
     }

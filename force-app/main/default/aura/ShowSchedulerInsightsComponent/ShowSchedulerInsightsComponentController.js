@@ -4,6 +4,10 @@
         var MPlist=[];
         var Month = event.getParam("Month");
         var Year = event.getParam("Year"); 
+        var refresh = event.getParam("refresh");
+        if(refresh){
+            component.set('v.refresh', false);
+        }
         component.set("v.selectedMonth",Month);
         component.set("v.selectedYear",Year);
         
@@ -24,6 +28,7 @@
                      component.set("v.ShowToCreateMonthlyBeatPlan",false);
                      component.set("v.MonthlyBeatPlanDataList",data);
                       component.set("v.userName",data.Sales_User__r.Name);
+                     component.set('v.refresh', true);
                  }else{
                      component.set("v.ShowToCreateMonthlyBeatPlan",true);
                  }     

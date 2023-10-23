@@ -2,7 +2,8 @@
     doInit: function (component, event, helper) {
         
         
-       	helper.getVisitRecs(component, event, helper); 
+        helper.getVisitRecs(component, event, helper); 
+        helper.loadCompletedTasks(component, event, helper);
         helper.callMapMethod(component, event, helper); 
         var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
        	var today = new Date;
@@ -108,6 +109,7 @@
         component.set('v.day', prnDt);
         console.log('third execution::==>'+dateToPass);
         helper.getVisitRecs(component, event, helper); 
+        helper.loadCompletedTasks(component, event, helper);
         console.log('forth execution::==>'+event);
         helper.reloadPage(component, event, helper);
         console.log('fivth execution::==>'+event);
@@ -171,6 +173,7 @@
                     var formattedDate = year + '-' + month + '-' + day;
                     component.set('v.selectedDate', formattedDate);
                     helper.getVisitRecs(component, event, helper);
+                    // helper.loadCompletedTasks(component, event, helper);
                     helper.StartVisitDayhelper(component,lat, long);
                     component.set("v.currentLatitude", lat);
                     component.set("v.currentLongitude", long);
@@ -201,23 +204,35 @@
     closeModelPop : function (component, event, helper) {
         component.set("v.ShowAmedVistPop",false);
     },
-    updateVisitHandler : function (component, event, helper) {
-        
+    updateVisitHandler: function (component, event, helper) {
+        debugger;
         var visitRecord = component.get("v.visitRec");
-        var visitRecId = visitRecord.Id;
-        var action = component.get("c.updateAmendVisitRecord");
-        action.setParams({
-            visitRec : visitRecord
-        });
-        action.setCallback(this,function(response){
-            if(response.getState() === "SUCCESS"){
-                var data = response.getReturnValue();
-                if(data !=null){
-                    alert("SUCCESS");            }
-            }
-        });
-        $A.enqueueAction(action);
+        var plannedVisitDate = new Date(visitRecord.Planned_visit_date__c);
+        var selectedDate = new Date(component.find("auraidActualVisitDate").get("v.value"));
+    
+        if (selectedDate > plannedVisitDate) {
+            // Selected date is valid, proceed with the action.
+            var action = component.get("c.updateAmendVisitRecord");
+            action.setParams({
+                visitRec: visitRecord
+            });
+    
+            action.setCallback(this, function (response) {
+                if (response.getState() === "SUCCESS") {
+                    var data = response.getReturnValue();
+                    if (data != null) {
+                        alert("SUCCESS");
+                    }
+                }
+            });
+    
+            $A.enqueueAction(action);
+        } else {
+            // Display an error message when the selected date is not greater than the planned visit date.
+            alert("New selected date cannot be earlier than the planned visit date.");
+        }
     },
+    
     
     handleNextClicked : function(component, event, helper){
         
@@ -291,6 +306,7 @@
         component.set('v.dateMonth', dateMonth);
         component.set('v.day', prnDt);
         helper.getVisitRecs(component, event, helper); 
+        helper.loadCompletedTasks(component, event, helper);
         helper.reloadPage(component, event, helper);
     },
     
@@ -366,6 +382,7 @@
         component.set('v.dateMonth', dateMonth);
         component.set('v.day', prnDt);
         helper.getVisitRecs(component, event, helper); 
+        helper.loadCompletedTasks(component, event, helper);
         helper.reloadPage(component, event, helper);
     },
     

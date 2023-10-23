@@ -4,9 +4,13 @@
         var action = component.get('c.getAllDateOfSchdeularSight');
         var pageSizeBeatStatus = component.get("v.BeatStatuspageSize").toString();
         var pageSizeProspects = component.get("v.ProspectspageSize").toString();
+        var monthName = component.get('v.monthName');
+        var monthYear = component.get('v.monthYear');
         action.setParams({
             "pageSize" : 10,
-            "pageNumber" : pageNo
+            "pageNumber" : pageNo,
+            "monthName" : monthName,
+            "monthYear" : monthYear
         });
         action.setCallback(this, function(response) {
             if(response.getState() === "SUCCESS"){

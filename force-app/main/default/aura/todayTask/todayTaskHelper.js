@@ -20,6 +20,12 @@
         action.setParams({
             visitDate :  formattedDate
         });
+
+        // var action = component.get('c.GetCompletedVisitRecords');
+        // action.setParams({
+        //     visitDate :  formattedDate
+        // });
+
         action.setCallback(this, function(response){ // AccountAddressList
             if(response.getState()==='SUCCESS'){
                 var result = response.getReturnValue();
@@ -104,6 +110,43 @@
         });
         $A.enqueueAction(action);
     },
+
+    loadCompletedTasks: function (component, event, helper) {
+        debugger;
+    
+            var today = new Date();
+            var selectedDate = component.get('v.selectedDate');        
+            var year = today.getFullYear();
+            var month = String(today.getMonth() + 1).padStart(2, '0'); 
+            var day = String(today.getDate()).padStart(2, '0');
+            
+            // Format the date in "YYYY-MM-DD" format
+            var formattedDate = year + '-' + month + '-' + day;
+            if(selectedDate != null && selectedDate != undefined){
+                formattedDate = selectedDate;
+            }
+            component.set('v.SelectedVisitDateFromTaskComp', formattedDate);
+            component.set('v.selectedDate', formattedDate);
+            var action = component.get("c.GetCompletedVisitRecords");
+            action.setParams({ visitDate: formattedDate });
+    
+            action.setCallback(this, function(response) {
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    var responseValue = response.getReturnValue();
+                    if (responseValue) {
+                        component.set("v.completedTaskList", responseValue.completedVisitList);
+                        // component.set("v.completedVisitCount", responseValue.completedVisit);
+                    }
+                } else {
+                    // Handle errors or display a message
+                    console.error("Error: " + state);
+                }
+            });
+    
+            $A.enqueueAction(action);
+        },
+    
     
     MapinitMethod: function (component, event, helper) {
         

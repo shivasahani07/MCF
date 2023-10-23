@@ -11,8 +11,8 @@
     <aura:attribute name="dataList" type="List"/>
     
     <div style="" class="travelInsightMain slds-m-top_large">
-        <h2 style="color: #0158A5; font-family:revert;font-size:150%;font-weight:550;" class="slds-m-top_large slds-m-right_large">Travel Insights</h2>
-        <div class="dateFilterMain  slds-align_absolute-center monthlyContainer">
+        <h2 class="slds-m-top_large h2Text slds-m-right_large">Travel Insights</h2>
+        <div class="dateFilterMain   monthlyContainer">
             <c:TravelInsightsDayBarComponent/>
         </div>
         <aura:if isTrue="{!not(v.ShowToCreateMonthlyBeatPlan)}">

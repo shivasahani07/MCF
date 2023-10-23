@@ -179,7 +179,8 @@
         //Set event attribute value
         cmpEvent.setParams({
             "Month" : Month,
-             "Year":Year
+             "Year":Year,
+            "refresh" : true
         }); 
         cmpEvent.fire(); 
 

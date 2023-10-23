@@ -13,8 +13,7 @@
     
     <!--<aura:registerEvent name="sampleCmpEvent" type="c:SampleComponentEvent" />-->
     
-    <div class="slds-m-left_medium slds-m-right_medium mobileBar" style="margin-left:1%;min-width:84.3vw;
-}">
+    <div class="slds-m-left_medium slds-m-right_medium mobileBar" style="margin-left:1%;min-width:84.3vw;}">
         <aura:if isTrue="{!v.ShowBeatPlannerName}">
         <lightning:layoutItem class="e" size="12" padding="around-large" >
             <div class="slds-grid   NameBar slds-m-horizontal_medium " >

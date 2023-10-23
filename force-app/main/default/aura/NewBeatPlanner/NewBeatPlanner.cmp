@@ -77,7 +77,7 @@
         }
         
         .SendApproval {
-        margin-left:-2rem;
+        margin-left:-5rem;
         background-color:#6BBD6E;
         color: #007bff;
         padding: 6px 12px;
@@ -341,6 +341,7 @@
                                     </aura:iteration-->
                                 </div>
                             </div>
+                            
                             <div class="callyContainer">
                                 <div  id="calendar"></div> 
                             </div>

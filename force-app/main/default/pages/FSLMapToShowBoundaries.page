@@ -1,121 +1,115 @@
-<apex:page showHeader="false" standardStylesheets="false">
+<apex:page showHeader="false" standardStylesheets="false" controller="BoundaryMapController">
   <html>
   <head>
     <title>City Boundaries</title>
     <style>
       #map-container {
-    position: relative;
-    width: 100%;
-    height: 400px;
-  }
+        position: relative;
+        width: 100%;
+        height: 400px;
+      }
 
-  #map {
-    width: 100%;
-    height: 100%;
-  }
-
-  #info-card {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: white;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0px 2px 5px silver;
-  }
-
-  #info-card h3 {
-    color: #3298f0;
-  }
-        
-         #info-card ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  #info-card li::before {
-    display: inline-block;
-    content: ' ';
-    width: 10px;
-    height: 10px;
-    margin-right: 5px;
-    border: 1px solid #000;
-    
-  }
-
-  #info-card li:nth-child(1)::before {
-    background-color: #6c55ff;
-  }
-
-  #info-card li:nth-child(2)::before {
-    background-color: #ff6242;
-
+      #map {
+        width: 100%;
+        height: 100%;
+      }
     </style>
   </head>
   <body>
     <div id="map-container">
       <div id="map"></div>
-      <div id="info-card">
-        <h3>Area Assigned to You</h3>
-        <ul>
-          <li>Delhi</li>
-          <li>Faridabad</li>
-        </ul>
-      </div>
     </div>
-
-    <!-- Google Maps API script with your API key -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAki1KNhw8H36mkjnT_BBsJyX-dsV3hmnA&callback=initMap" async="true" defer="true"></script>
 
     <script>
       function initMap() {
         const map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 10, // Adjust the initial zoom level as needed
-          center: { lat: 28.6139, lng: 77.2090 } // Default center for Delhi
+          zoom: 10,
+          center: { lat: 28.6139, lng: 77.2090 }
         });
 
-        // Create a new Data layer for Faridabad
-        const faridabadLayer = new google.maps.Data();
-        faridabadLayer.setStyle({
-          fillColor: "#ff6242",
-          fillOpacity: 0.5,
-          strokeWeight: 2,
-          strokeColor: "#ff6242"
-        });
-        faridabadLayer.setMap(map);
 
-        // Load and add Faridabad GeoJSON data
-        fetch('{!$Resource.FaridabadGeoJson}')
-          .then((response) => response.json())
-          .then((data) => {
-            faridabadLayer.addGeoJson(data);
-          })
-          .catch((error) => {
-            console.error('Failed to load Faridabad GeoJSON data: ' + error.message);
-          });
+        function callApexMethod() {
+          debugger;
+            var inputParameter = 'Hello, World!';
+            BoundaryMapController.getBoundaryMap(function(result, event) {
+                debugger;
+                if (event.status) {
+                  for (const routeName in result) {
+                const accounts = result[routeName];
 
-        // Create a new Data layer for Gurugram
-        const gurugramLayer = new google.maps.Data();
-        gurugramLayer.setStyle({
-          fillColor: "#6c55ff",
-          fillOpacity: 0.5,
-          strokeWeight: 2,
-          strokeColor: "#6c55ff"
-        });
-        gurugramLayer.setMap(map);
+                const coordinates = accounts.map(account => ({
+                  lat: account.Geo_Location__latitude__s,
+                  lng: account.Geo_Location__longitude__s
+                }));
 
-        // Load and add Gurugram GeoJSON data
-        fetch('{!$Resource.DelhiGeoJson}')
-          .then((response) => response.json())
-          .then((data) => {
-            gurugramLayer.addGeoJson(data);
-          })
-          .catch((error) => {
-            console.error('Failed to load Gurugram GeoJSON data: ' + error.message);
-          });
+                console.log('coordinates-------->' + JSON.stringify(coordinates)); // Use console.log()
+
+                const routePolygon = new google.maps.Polygon({
+                  paths: coordinates,
+                  strokeColor: getRandomColor(),
+                  strokeOpacity: 0.8,
+                  strokeWeight: 2,
+                  fillColor: getRandomColor(),
+                  fillOpacity: 0.5
+                });
+
+                routePolygon.setMap(map);
+              }
+                } else {
+                    alert('Error: ' + event.message);
+                }
+            });
+        }
+
+        callApexMethod();
+
+        // Get data from the Apex controller
+        // Visualforce.remoting.Manager.invokeAction(
+        //   '{!$RemoteAction.BoundaryMapController.getBoundaryMap}',
+        //   function(result, event) {
+        //     console.log('result---->' + JSON.stringify(result));
+        //     if (event.status) {
+        //       // Process the data to create polygons
+        //       for (const routeName in result) {
+        //         const accounts = result[routeName];
+
+        //         const coordinates = accounts.map(account => ({
+        //           lat: account.Geo_Location__latitude__s,
+        //           lng: account.Geo_Location__longitude__s
+        //         }));
+
+        //         console.log('coordinates-------->' + JSON.stringify(coordinates)); // Use console.log()
+
+        //         const routePolygon = new google.maps.Polygon({
+        //           paths: coordinates,
+        //           strokeColor: getRandomColor(),
+        //           strokeOpacity: 0.8,
+        //           strokeWeight: 2,
+        //           fillColor: getRandomColor(),
+        //           fillOpacity: 0.5
+        //         });
+
+        //         routePolygon.setMap(map);
+        //       }
+        //     } else {
+        //       console.log("Error: " + event.message);
+        //     }
+        //   }
+        // );
+
+        function getRandomColor() {
+          const letters = "0123456789ABCDEF";
+          let color = "#";
+          for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+          }
+          return color;
+        }
       }
     </script>
+
   </body>
   </html>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAki1KNhw8H36mkjnT_BBsJyX-dsV3hmnA&callback=initMap" async="true" defer="true"></script>
 </apex:page>

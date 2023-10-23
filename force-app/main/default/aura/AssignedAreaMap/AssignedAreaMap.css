@@ -4,3 +4,9 @@
     height: 40%;
     margin-left:8%
 }
+
+@media (max-width: 768px) {
+    .THIS.mapContainer iframe {
+        width: 300px;
+    }
+}

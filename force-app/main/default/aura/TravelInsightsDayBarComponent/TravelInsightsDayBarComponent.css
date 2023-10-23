@@ -65,7 +65,7 @@
     .THIS .monthFilterMobile{
         display: flex;
         overflow-x: scroll;
-        min-width: 17rem;
+        min-width: 14rem;
         font-size: 80%;
     }
     
@@ -93,7 +93,7 @@
 
 .THIS .mobileAlignPrev{
     background-color:#1589EE;
-     margin-right:7px;
+    margin-left: 13%;
    
 }
 
